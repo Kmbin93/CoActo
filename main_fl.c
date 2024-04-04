@@ -22,10 +22,10 @@ int main (int argc, char **argv)
     char nasm_name[256] = {0};
     char *dirname = "fl";
 
-    const int server_port = 62000;
-    char* server_ip = "147.46.130.51";
+    int server_port;
+    char* server_ip;
 
-    if (argc == 8) {
+    if (argc == 10) {
         dirname = argv[1];
         strcpy (dnn, argv[2]);
         batch_size = atoi (argv[3]);
@@ -33,10 +33,12 @@ int main (int argc, char **argv)
         number_of_iterations = atoi (argv[5]);
         num_cores = atoi (argv[6]);
         dev_mode = atoi (argv[7]);
+        server_ip = argv[8];
+        server_port = atoi(argv[9]);
 
         PRTF("Find FL params automatically\n");
     }
-    else if (argc > 10)
+    else if (argc > 12)
     {
         dirname = argv[1];
         strcpy (dnn, argv[2]);
@@ -45,29 +47,31 @@ int main (int argc, char **argv)
         number_of_iterations = atoi (argv[5]);
         num_cores = atoi (argv[6]);
         dev_mode = atoi (argv[7]);
-        fl_split_layer_idx = atoi (argv[8]);
-        fl_num_path = atoi (argv[9]);
+        server_ip = argv[8];
+        server_port = atoi(argv[9]);
+        fl_split_layer_idx = atoi (argv[10]);
+        fl_num_path = atoi (argv[11]);
         for (int i=0; i<fl_num_path; i++) {
-            fl_path_offloading_idx[i] = atoi (argv[10+i]);
+            fl_path_offloading_idx[i] = atoi (argv[12+i]);
         }
     }
     else
     {
-        printf ("Usage: %s <dirname> <dnn> <batch_size> <num_tiles> <number_of_iterations> <num_cores> <dev_mode> <fl_last_layer> <fl_num_path> <fl_path_offloading_idx1> ...\n", argv[0]);
+        printf ("Usage: %s <dirname> <dnn> <batch_size> <num_tiles> <number_of_iterations> <num_cores> <dev_mode> <server_ip> <server_port> <fl_last_layer> <fl_num_path> <fl_path_offloading_idx1> ...\n", argv[0]);
         exit (0);
     }
 
     char target_cfg[1024] = {0};
     if (strcmp(dnn, "bert_base") != 0)
-        sprintf (target_cfg, "data/cfg/%s_aspen.cfg", dnn);
+        sprintf (target_cfg, "../../data/cfg/%s_aspen.cfg", dnn);
     else
-        sprintf (target_cfg, "data/cfg/%s_encoder.cfg", dnn);
+        sprintf (target_cfg, "../../data/cfg/%s_encoder.cfg", dnn);
     char target_data[1024] = {0};
-    sprintf (target_data, "data/%s_data.bin", dnn);
+    sprintf (target_data, "../../data/%s_data.bin", dnn);
     char target_aspen[1024] = {0};
-    sprintf (target_aspen, "data/%s_base.aspen", dnn);
+    sprintf (target_aspen, "../../data/%s_base.aspen", dnn);
     char nasm_file_name [1024] = {0};
-    sprintf (nasm_file_name, "data/%s_B%d_T%d.nasm", dnn, batch_size, num_tiles);
+    sprintf (nasm_file_name, "../../data/%s_B%d_T%d.nasm", dnn, batch_size, num_tiles);
 
     // aspen_dnn_t *target_dnn = apu_create_dnn(target_cfg, target_data);
     // apu_save_dnn_to_file (target_dnn, target_aspen);
@@ -184,7 +188,7 @@ profiling:
     dse_group_set_num_edge_devices (dse_group, 2);
     networking_engine* net_engine = NULL;
 
-    rpool_add_nasm (rpool, target_nasm, "data/batched_input_128.bin");
+    rpool_add_nasm (rpool, target_nasm, "../../data/batched_input_128.bin");
 
 
     /* FL PATH CREATION */
@@ -273,6 +277,9 @@ profiling:
         double inf_latency = 0.0;
         double start_time = 0.0;
 
+        net_engine_reset(net_engine);
+        net_engine_set_operating_mode(net_engine, OPER_MODE_FL_PATH);
+        
         net_engine_run(net_engine);
         rpool_reset_queue (rpool);
         apu_reset_nasm(target_nasm);
@@ -283,18 +290,38 @@ profiling:
         set_elapsed_time_start ();
         dse_group_run (dse_group);
         dse_wait_for_nasm_completion (target_nasm);
+        
+        end_time = get_sec();
+        get_elapsed_time ("run_aspen");
 
         if (dev_mode != DEV_LOCAL) {
-            unsigned int tx_remaining = atomic_load(&net_engine->rpool->num_stored);
-            while (tx_remaining > 0) tx_remaining = atomic_load(&net_engine->rpool->num_stored);
+            // unsigned int tx_remaining = atomic_load(&net_engine->rpool->num_stored);
+            // while (tx_remaining > 0) tx_remaining = atomic_load(&net_engine->rpool->num_stored);
             net_engine_wait_for_tx_queue_completion(net_engine);
-            net_engine_reset(net_engine);
-            net_engine_set_operating_mode(net_engine, OPER_MODE_FL_PATH);
+            net_engine_stop (net_engine);
         }
+
         dse_group_stop (dse_group);
-        if (dev_mode != DEV_LOCAL) net_engine_stop (net_engine);
-        // end_time = get_sec();
-        get_elapsed_time ("run_aspen");
+        // if (dev_mode != DEV_LOCAL) net_engine_stop (net_engine);
+
+        if(dev_mode == DEV_SERVER)
+        {
+            max_recv_time = get_max_recv_time(target_nasm);
+            
+            // if((max_computed_time - min_computed_time) > 0)
+            prev_server_latency = max_computed_time - min_computed_time;
+
+            write_n(client_sock, &prev_server_latency, sizeof(float));
+            write_n(client_sock, &max_recv_time, sizeof(double));
+        }
+
+        if(dev_mode == DEV_EDGE)
+        {
+            min_sent_time = get_min_sent_time(target_nasm);
+            prev_edge_latency = max_computed_time - min_computed_time;
+            read_n(server_sock, &prev_server_latency, sizeof(float));
+            read_n(server_sock, &max_recv_time, sizeof(double));
+        }
 
         // For logging
         char file_name[1024], dir_path[1024], dir_edge_path[1024];
@@ -313,15 +340,16 @@ profiling:
         fl_reset_nasm_path(target_nasm);
 
         dse_set_starting_path (target_nasm->path_ptr_arr[0]);
+        PRTF("Transmission latency : %f\n", (max_recv_time - min_sent_time)*1000.0);
 
     }
     end_time = get_sec();
 
-    #ifndef SUPRESS_OUTPUT
-    printf ("Time taken: %lf seconds\n", (end_time - start_time)/number_of_iterations);
-    #else
-    printf ("%lf\n", (end_time - start_time)/number_of_iterations);
-    #endif
+    // #ifndef SUPRESS_OUTPUT
+    // printf ("Time taken: %lf seconds\n", (end_time - start_time)/number_of_iterations);
+    // #else
+    // printf ("%lf\n", (end_time - start_time)/number_of_iterations);
+    // #endif
 
     // if (strcmp(dnn, "bert_base") != 0 && strcmp(dnn, "yolov3") != 0)
     // {

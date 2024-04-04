@@ -1,0 +1,1923 @@
+Running tests 5 times, at Linux nxc-3990x 5.15.0-91-generic #101-Ubuntu SMP Tue Nov 14 13:30:08 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux
+    DNNs: vgg16 resnet50 bert_base yolov3
+    Batch sizes: 
+    Scheduling policies: 
+    EDGE username: nxc
+    EDGE ip: 147.46.118.129
+    EDGE port: 56788
+    Num tiles: 50 100 200 400 800
+Script started at 2024-04-04-20:41:10
+
+//////////    Set TC in EDGE    //////////
+     ssh nxc@147.46.118.129 -p 56788 'echo bestnxcl | sudo -S tc qdisc del dev wlan0 root'
+     ssh nxc@147.46.118.129 -p 56788 'echo bestnxcl | sudo -S tc qdisc add dev wlan0 root handle 1: htb default 6'
+     ssh nxc@147.46.118.129 -p 56788 'echo bestnxcl | sudo -S tc class add dev wlan0 parent 1: classid 1:6 htb rate 100mbit'
+//////////    SERVER command    //////////
+    taskset -c 0-65 ../../coacto --device_mode=0 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/vgg16_B1_T50.nasm --target_dnn_dir=../../data/vgg16_base.aspen --target_input=../../data/batched_input_128.bin --prefix=vgg16 --server_ip=147.46.130.89  --server_port=8100  --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=64 --output_order=cnn --inference_repeat_num=5 --num_edge_devices=1
+//////////    EDGE command    //////////
+    ssh nxc@147.46.118.129 -p 56788 'cd ~/kmbin/CoActo/mobisys24_artifact/fig8 && ../../coacto --device_mode=1 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/vgg16_B1_T50.nasm --target_dnn_dir=../../data/vgg16_base.aspen --target_input=../../data/batched_input_128.bin --prefix=vgg16 --server_ip=147.46.130.89 --server_port=8100 --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=6 --output_order=cnn --inference_repeat_num=5 --num_edge_devices=1'
+    20:41:13: DNN vgg16 Policy dynamic Server core 64 batch size 1 BW 100 (1/20)
+//////////    SERVER Output    //////////
+        
+////////////    PRINTING ASPEN BUILD INFO    ////////////
+
+1. Time of Build:	Thu Apr  4 17:00:26 KST 2024
+2. Build Commit:	commit 0814fa0482bb39856cc903121426113bfdc21ab3
+3. Build System:	Linux 5.15.0-91-generic #101-Ubuntu SMP Tue Nov 14 13:30:08 UTC 2023 x86_64 x86_64 x86_64
+4. Compiler Version:		gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
+5. NVCC Version:	
+6. GPU ARCH:		
+7. Build Flags:		-Iinclude/ -lm -lgomp -Wall -fopenmp -Ofast -march=native -funroll-loops -mavx2 -mfma -DAVX2
+
+////////////////////////////////////////////////////////
+
+nasm_name: vgg16_B1_T50
+STAGE: Initialization
+	Edge 0 is connected
+	Initialized to device idx: 1
+STAGE: PARTITIONING
+	[EDGE 0] NASM: ../../data/vgg16_B1_T50.nasm
+	[EDGE 0] DNN: ../../data/vgg16_base.aspen
+	[EDGE 0] INPUT: ../../data/batched_input_128.bin
+STAGE: PROFILING COMPUTATION 1
+[Init sequential offload] division ninst idx: 0 from dev: 1 server_id: 1
+		Signaling nasm completion...
+	Total: 1299	Avg Computation Time: 3.018791ms
+STAGE: PROFILING NETWORK
+	[Edge Device 0]connection key: 12534
+	profiling as SERVER...
+STAGE: SCHEDULING - dynamic
+	[Device 1]Init dynamic scheduler
+	[Device 0]Avg server ninst computation time: 3.018791ms
+	[Device 0]Avg edge ninst computation time:   2.563082ms
+	[Device 0]Avg bandwidth: 76.795067Mbps
+	[Device 0]RTT: 4.880965ms
+STAGE: INFERENCE
+Initializing Networking Engine...
+Networking: TCP Server listening on port 8100
+Networking: TCP Server accepted connection from 147.46.118.129
+Networking: TCP Server received EDGE ACK
+[Inference 1] inference: 1/5
+	[Edge Device 0]connection key: 12534
+	[Edge Device 0]time_offset: 0.240305
+[Inference 1] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (0): 1.381537 - 0.169492 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (64/1299)
+	[Edge 0] Transmission latency : 1049.903989
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 2] inference: 2/5
+	[Edge Device 0]connection key: 12535
+	[Edge Device 0]time_offset: 0.237650
+[Inference 2] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (1): 1.797068 - 0.148713 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (64/1299)
+	[Edge 0] Transmission latency : 1471.363068
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 3] inference: 3/5
+	[Edge Device 0]connection key: 12536
+	[Edge Device 0]time_offset: 0.242779
+[Inference 3] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (2): 2.319552 - 0.148072 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (64/1299)
+	[Edge 0] Transmission latency : 1986.890554
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 4] inference: 4/5
+	[Edge Device 0]connection key: 12537
+	[Edge Device 0]time_offset: 0.238842
+[Inference 4] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (3): 2.894098 - 0.137939 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (64/1299)
+	[Edge 0] Transmission latency : 2575.388432
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 5] inference: 5/5
+	[Edge Device 0]connection key: 12538
+	[Edge Device 0]time_offset: 0.238092
+[Inference 5] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (4): 3.514795 - 0.153540 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (64/1299)
+	[Edge 0] Transmission latency : 3182.462692
+	[Edge 0] Dynamic overhead : 0.000000
+//////////    SERVER command    //////////
+    taskset -c 0-65 ../../coacto --device_mode=0 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/vgg16_B1_T100.nasm --target_dnn_dir=../../data/vgg16_base.aspen --target_input=../../data/batched_input_128.bin --prefix=vgg16 --server_ip=147.46.130.89  --server_port=8100  --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=64 --output_order=cnn --inference_repeat_num=5 --num_edge_devices=1
+//////////    EDGE command    //////////
+    ssh nxc@147.46.118.129 -p 56788 'cd ~/kmbin/CoActo/mobisys24_artifact/fig8 && ../../coacto --device_mode=1 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/vgg16_B1_T100.nasm --target_dnn_dir=../../data/vgg16_base.aspen --target_input=../../data/batched_input_128.bin --prefix=vgg16 --server_ip=147.46.130.89 --server_port=8100 --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=6 --output_order=cnn --inference_repeat_num=5 --num_edge_devices=1'
+    20:41:21: DNN vgg16 Policy dynamic Server core 64 batch size 1 BW 100 (2/20)
+//////////    SERVER Output    //////////
+        
+////////////    PRINTING ASPEN BUILD INFO    ////////////
+
+1. Time of Build:	Thu Apr  4 17:00:26 KST 2024
+2. Build Commit:	commit 0814fa0482bb39856cc903121426113bfdc21ab3
+3. Build System:	Linux 5.15.0-91-generic #101-Ubuntu SMP Tue Nov 14 13:30:08 UTC 2023 x86_64 x86_64 x86_64
+4. Compiler Version:		gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
+5. NVCC Version:	
+6. GPU ARCH:		
+7. Build Flags:		-Iinclude/ -lm -lgomp -Wall -fopenmp -Ofast -march=native -funroll-loops -mavx2 -mfma -DAVX2
+
+////////////////////////////////////////////////////////
+
+nasm_name: vgg16_B1_T100
+STAGE: Initialization
+	Edge 0 is connected
+	Initialized to device idx: 1
+STAGE: PARTITIONING
+	[EDGE 0] NASM: ../../data/vgg16_B1_T100.nasm
+	[EDGE 0] DNN: ../../data/vgg16_base.aspen
+	[EDGE 0] INPUT: ../../data/batched_input_128.bin
+STAGE: PROFILING COMPUTATION 1
+[Init sequential offload] division ninst idx: 0 from dev: 1 server_id: 1
+		Signaling nasm completion...
+	Total: 2502	Avg Computation Time: 1.951570ms
+STAGE: PROFILING NETWORK
+	[Edge Device 0]connection key: 12534
+	profiling as SERVER...
+STAGE: SCHEDULING - dynamic
+	[Device 1]Init dynamic scheduler
+	[Device 0]Avg server ninst computation time: 1.951570ms
+	[Device 0]Avg edge ninst computation time:   1.366000ms
+	[Device 0]Avg bandwidth: 76.549576Mbps
+	[Device 0]RTT: 3.118038ms
+STAGE: INFERENCE
+Initializing Networking Engine...
+Networking: TCP Server listening on port 8100
+Networking: TCP Server accepted connection from 147.46.118.129
+Networking: TCP Server received EDGE ACK
+[Inference 1] inference: 1/5
+	[Edge Device 0]connection key: 12534
+	[Edge Device 0]time_offset: 0.960460
+[Inference 1] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (0): 2.095128 - 0.169915 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (127/2502)
+	[Edge 0] Transmission latency : 1046.220422
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 2] inference: 2/5
+	[Edge Device 0]connection key: 12535
+	[Edge Device 0]time_offset: 0.959213
+[Inference 2] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (1): 2.420812 - 0.152895 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (127/2502)
+	[Edge 0] Transmission latency : 1369.291544
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 3] inference: 3/5
+	[Edge Device 0]connection key: 12536
+	[Edge Device 0]time_offset: 0.958318
+[Inference 3] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (2): 2.998363 - 0.146329 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (127/2502)
+	[Edge 0] Transmission latency : 1954.001546
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 4] inference: 4/5
+	[Edge Device 0]connection key: 12537
+	[Edge Device 0]time_offset: 0.957073
+[Inference 4] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (3): 3.660726 - 0.152505 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (127/2502)
+	[Edge 0] Transmission latency : 2629.766941
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 5] inference: 5/5
+	[Edge Device 0]connection key: 12538
+	[Edge Device 0]time_offset: 0.958342
+[Inference 5] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (4): 4.330792 - 0.142169 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (127/2502)
+	[Edge 0] Transmission latency : 3289.944649
+	[Edge 0] Dynamic overhead : 0.000000
+//////////    SERVER command    //////////
+    taskset -c 0-65 ../../coacto --device_mode=0 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/vgg16_B1_T200.nasm --target_dnn_dir=../../data/vgg16_base.aspen --target_input=../../data/batched_input_128.bin --prefix=vgg16 --server_ip=147.46.130.89  --server_port=8100  --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=64 --output_order=cnn --inference_repeat_num=5 --num_edge_devices=1
+//////////    EDGE command    //////////
+    ssh nxc@147.46.118.129 -p 56788 'cd ~/kmbin/CoActo/mobisys24_artifact/fig8 && ../../coacto --device_mode=1 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/vgg16_B1_T200.nasm --target_dnn_dir=../../data/vgg16_base.aspen --target_input=../../data/batched_input_128.bin --prefix=vgg16 --server_ip=147.46.130.89 --server_port=8100 --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=6 --output_order=cnn --inference_repeat_num=5 --num_edge_devices=1'
+    20:41:30: DNN vgg16 Policy dynamic Server core 64 batch size 1 BW 100 (3/20)
+//////////    SERVER Output    //////////
+        
+////////////    PRINTING ASPEN BUILD INFO    ////////////
+
+1. Time of Build:	Thu Apr  4 17:00:26 KST 2024
+2. Build Commit:	commit 0814fa0482bb39856cc903121426113bfdc21ab3
+3. Build System:	Linux 5.15.0-91-generic #101-Ubuntu SMP Tue Nov 14 13:30:08 UTC 2023 x86_64 x86_64 x86_64
+4. Compiler Version:		gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
+5. NVCC Version:	
+6. GPU ARCH:		
+7. Build Flags:		-Iinclude/ -lm -lgomp -Wall -fopenmp -Ofast -march=native -funroll-loops -mavx2 -mfma -DAVX2
+
+////////////////////////////////////////////////////////
+
+nasm_name: vgg16_B1_T200
+STAGE: Initialization
+	Edge 0 is connected
+	Initialized to device idx: 1
+STAGE: PARTITIONING
+	[EDGE 0] NASM: ../../data/vgg16_B1_T200.nasm
+	[EDGE 0] DNN: ../../data/vgg16_base.aspen
+	[EDGE 0] INPUT: ../../data/batched_input_128.bin
+STAGE: PROFILING COMPUTATION 1
+[Init sequential offload] division ninst idx: 0 from dev: 1 server_id: 1
+		Signaling nasm completion...
+	Total: 4187	Avg Computation Time: 1.254796ms
+STAGE: PROFILING NETWORK
+	[Edge Device 0]connection key: 12534
+	profiling as SERVER...
+STAGE: SCHEDULING - dynamic
+	[Device 1]Init dynamic scheduler
+	[Device 0]Avg server ninst computation time: 1.254796ms
+	[Device 0]Avg edge ninst computation time:   0.677403ms
+	[Device 0]Avg bandwidth: 74.214851Mbps
+	[Device 0]RTT: 3.475904ms
+STAGE: INFERENCE
+Initializing Networking Engine...
+Networking: TCP Server listening on port 8100
+Networking: TCP Server accepted connection from 147.46.118.129
+Networking: TCP Server received EDGE ACK
+[Inference 1] inference: 1/5
+	[Edge Device 0]connection key: 12534
+	[Edge Device 0]time_offset: 1.044238
+[Inference 1] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (0): 2.099651 - 0.155981 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (246/4187)
+	[Edge 0] Transmission latency : 973.367572
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 2] inference: 2/5
+	[Edge Device 0]connection key: 12535
+	[Edge Device 0]time_offset: 1.043103
+[Inference 2] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (1): 2.560046 - 0.157432 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (246/4187)
+	[Edge 0] Transmission latency : 1421.738505
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 3] inference: 3/5
+	[Edge Device 0]connection key: 12536
+	[Edge Device 0]time_offset: 1.043567
+[Inference 3] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (2): 3.149825 - 0.147841 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (246/4187)
+	[Edge 0] Transmission latency : 2017.158747
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 4] inference: 4/5
+	[Edge Device 0]connection key: 12537
+	[Edge Device 0]time_offset: 1.042888
+[Inference 4] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (3): 3.891659 - 0.157301 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (246/4187)
+	[Edge 0] Transmission latency : 2750.338554
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 5] inference: 5/5
+	[Edge Device 0]connection key: 12538
+	[Edge Device 0]time_offset: 1.043118
+[Inference 5] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (4): 4.460082 - 0.148028 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (246/4187)
+	[Edge 0] Transmission latency : 3332.758427
+	[Edge 0] Dynamic overhead : 0.000000
+//////////    SERVER command    //////////
+    taskset -c 0-65 ../../coacto --device_mode=0 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/vgg16_B1_T400.nasm --target_dnn_dir=../../data/vgg16_base.aspen --target_input=../../data/batched_input_128.bin --prefix=vgg16 --server_ip=147.46.130.89  --server_port=8100  --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=64 --output_order=cnn --inference_repeat_num=5 --num_edge_devices=1
+//////////    EDGE command    //////////
+    ssh nxc@147.46.118.129 -p 56788 'cd ~/kmbin/CoActo/mobisys24_artifact/fig8 && ../../coacto --device_mode=1 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/vgg16_B1_T400.nasm --target_dnn_dir=../../data/vgg16_base.aspen --target_input=../../data/batched_input_128.bin --prefix=vgg16 --server_ip=147.46.130.89 --server_port=8100 --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=6 --output_order=cnn --inference_repeat_num=5 --num_edge_devices=1'
+    20:41:38: DNN vgg16 Policy dynamic Server core 64 batch size 1 BW 100 (4/20)
+//////////    SERVER Output    //////////
+        
+////////////    PRINTING ASPEN BUILD INFO    ////////////
+
+1. Time of Build:	Thu Apr  4 17:00:26 KST 2024
+2. Build Commit:	commit 0814fa0482bb39856cc903121426113bfdc21ab3
+3. Build System:	Linux 5.15.0-91-generic #101-Ubuntu SMP Tue Nov 14 13:30:08 UTC 2023 x86_64 x86_64 x86_64
+4. Compiler Version:		gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
+5. NVCC Version:	
+6. GPU ARCH:		
+7. Build Flags:		-Iinclude/ -lm -lgomp -Wall -fopenmp -Ofast -march=native -funroll-loops -mavx2 -mfma -DAVX2
+
+////////////////////////////////////////////////////////
+
+nasm_name: vgg16_B1_T400
+STAGE: Initialization
+	Edge 0 is connected
+	Initialized to device idx: 1
+STAGE: PARTITIONING
+	[EDGE 0] NASM: ../../data/vgg16_B1_T400.nasm
+	[EDGE 0] DNN: ../../data/vgg16_base.aspen
+	[EDGE 0] INPUT: ../../data/batched_input_128.bin
+STAGE: PROFILING COMPUTATION 1
+[Init sequential offload] division ninst idx: 0 from dev: 1 server_id: 1
+		Signaling nasm completion...
+	Total: 7636	Avg Computation Time: 0.740393ms
+STAGE: PROFILING NETWORK
+	[Edge Device 0]connection key: 12534
+	profiling as SERVER...
+STAGE: SCHEDULING - dynamic
+	[Device 1]Init dynamic scheduler
+	[Device 0]Avg server ninst computation time: 0.740393ms
+	[Device 0]Avg edge ninst computation time:   0.373323ms
+	[Device 0]Avg bandwidth: 83.469734Mbps
+	[Device 0]RTT: 3.454089ms
+STAGE: INFERENCE
+Initializing Networking Engine...
+Networking: TCP Server listening on port 8100
+Networking: TCP Server accepted connection from 147.46.118.129
+Networking: TCP Server received EDGE ACK
+[Inference 1] inference: 1/5
+	[Edge Device 0]connection key: 12534
+	[Edge Device 0]time_offset: 0.934968
+[Inference 1] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (0): 1.873629 - 0.147486 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (465/7636)
+	[Edge 0] Transmission latency : 861.999035
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 2] inference: 2/5
+	[Edge Device 0]connection key: 12535
+	[Edge Device 0]time_offset: 0.931183
+[Inference 2] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (1): 2.437810 - 0.142837 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (465/7636)
+	[Edge 0] Transmission latency : 1425.221324
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 3] inference: 3/5
+	[Edge Device 0]connection key: 12536
+	[Edge Device 0]time_offset: 0.932415
+[Inference 3] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (2): 3.158981 - 0.155066 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (466/7636)
+	[Edge 0] Transmission latency : 2133.867025
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 4] inference: 4/5
+	[Edge Device 0]connection key: 12537
+	[Edge Device 0]time_offset: 0.933749
+[Inference 4] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (3): 3.937338 - 0.153286 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (466/7636)
+	[Edge 0] Transmission latency : 2910.944462
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 5] inference: 5/5
+	[Edge Device 0]connection key: 12538
+	[Edge Device 0]time_offset: 0.933281
+[Inference 5] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (4): 4.255269 - 0.151784 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (465/7636)
+	[Edge 0] Transmission latency : 3230.275631
+	[Edge 0] Dynamic overhead : 0.000000
+//////////    SERVER command    //////////
+    taskset -c 0-65 ../../coacto --device_mode=0 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/vgg16_B1_T800.nasm --target_dnn_dir=../../data/vgg16_base.aspen --target_input=../../data/batched_input_128.bin --prefix=vgg16 --server_ip=147.46.130.89  --server_port=8100  --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=64 --output_order=cnn --inference_repeat_num=5 --num_edge_devices=1
+//////////    EDGE command    //////////
+    ssh nxc@147.46.118.129 -p 56788 'cd ~/kmbin/CoActo/mobisys24_artifact/fig8 && ../../coacto --device_mode=1 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/vgg16_B1_T800.nasm --target_dnn_dir=../../data/vgg16_base.aspen --target_input=../../data/batched_input_128.bin --prefix=vgg16 --server_ip=147.46.130.89 --server_port=8100 --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=6 --output_order=cnn --inference_repeat_num=5 --num_edge_devices=1'
+    20:41:48: DNN vgg16 Policy dynamic Server core 64 batch size 1 BW 100 (5/20)
+//////////    SERVER Output    //////////
+        
+////////////    PRINTING ASPEN BUILD INFO    ////////////
+
+1. Time of Build:	Thu Apr  4 17:00:26 KST 2024
+2. Build Commit:	commit 0814fa0482bb39856cc903121426113bfdc21ab3
+3. Build System:	Linux 5.15.0-91-generic #101-Ubuntu SMP Tue Nov 14 13:30:08 UTC 2023 x86_64 x86_64 x86_64
+4. Compiler Version:		gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
+5. NVCC Version:	
+6. GPU ARCH:		
+7. Build Flags:		-Iinclude/ -lm -lgomp -Wall -fopenmp -Ofast -march=native -funroll-loops -mavx2 -mfma -DAVX2
+
+////////////////////////////////////////////////////////
+
+nasm_name: vgg16_B1_T800
+STAGE: Initialization
+	Edge 0 is connected
+	Initialized to device idx: 1
+STAGE: PARTITIONING
+	[EDGE 0] NASM: ../../data/vgg16_B1_T800.nasm
+	[EDGE 0] DNN: ../../data/vgg16_base.aspen
+	[EDGE 0] INPUT: ../../data/batched_input_128.bin
+STAGE: PROFILING COMPUTATION 1
+[Init sequential offload] division ninst idx: 0 from dev: 1 server_id: 1
+		Signaling nasm completion...
+	Total: 11893	Avg Computation Time: 0.497783ms
+STAGE: PROFILING NETWORK
+	[Edge Device 0]connection key: 12534
+	profiling as SERVER...
+STAGE: SCHEDULING - dynamic
+	[Device 1]Init dynamic scheduler
+	[Device 0]Avg server ninst computation time: 0.497783ms
+	[Device 0]Avg edge ninst computation time:   0.227672ms
+	[Device 0]Avg bandwidth: 80.662247Mbps
+	[Device 0]RTT: 6.460071ms
+STAGE: INFERENCE
+Initializing Networking Engine...
+Networking: TCP Server listening on port 8100
+Networking: TCP Server accepted connection from 147.46.118.129
+Networking: TCP Server received EDGE ACK
+[Inference 1] inference: 1/5
+	[Edge Device 0]connection key: 12534
+	[Edge Device 0]time_offset: 0.915813
+[Inference 1] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (0): 1.951993 - 0.166252 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (837/11893)
+	[Edge 0] Transmission latency : 938.486040
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 2] inference: 2/5
+	[Edge Device 0]connection key: 12535
+	[Edge Device 0]time_offset: 0.914819
+[Inference 2] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (1): 2.443660 - 0.150014 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (837/11893)
+	[Edge 0] Transmission latency : 1435.668945
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 3] inference: 3/5
+	[Edge Device 0]connection key: 12536
+	[Edge Device 0]time_offset: 0.915014
+[Inference 3] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (2): 2.867580 - 0.155268 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (842/11893)
+	[Edge 0] Transmission latency : 1857.732177
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 4] inference: 4/5
+	[Edge Device 0]connection key: 12537
+	[Edge Device 0]time_offset: 0.913766
+[Inference 4] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (3): 3.583058 - 0.148015 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (839/11893)
+	[Edge 0] Transmission latency : 2585.224390
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 5] inference: 5/5
+	[Edge Device 0]connection key: 12538
+	[Edge Device 0]time_offset: 0.913287
+[Inference 5] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (4): 4.551635 - 0.158878 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (838/11893)
+	[Edge 0] Transmission latency : 3540.244341
+	[Edge 0] Dynamic overhead : 0.000000
+//////////    SERVER command    //////////
+    taskset -c 0-65 ../../coacto --device_mode=0 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/resnet50_B1_T50.nasm --target_dnn_dir=../../data/resnet50_base.aspen --target_input=../../data/batched_input_128.bin --prefix=resnet50 --server_ip=147.46.130.89  --server_port=8100  --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=64 --output_order=cnn --inference_repeat_num=5 --num_edge_devices=1
+//////////    EDGE command    //////////
+    ssh nxc@147.46.118.129 -p 56788 'cd ~/kmbin/CoActo/mobisys24_artifact/fig8 && ../../coacto --device_mode=1 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/resnet50_B1_T50.nasm --target_dnn_dir=../../data/resnet50_base.aspen --target_input=../../data/batched_input_128.bin --prefix=resnet50 --server_ip=147.46.130.89 --server_port=8100 --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=6 --output_order=cnn --inference_repeat_num=5 --num_edge_devices=1'
+    20:41:58: DNN resnet50 Policy dynamic Server core 64 batch size 1 BW 100 (6/20)
+//////////    SERVER Output    //////////
+        
+////////////    PRINTING ASPEN BUILD INFO    ////////////
+
+1. Time of Build:	Thu Apr  4 17:00:26 KST 2024
+2. Build Commit:	commit 0814fa0482bb39856cc903121426113bfdc21ab3
+3. Build System:	Linux 5.15.0-91-generic #101-Ubuntu SMP Tue Nov 14 13:30:08 UTC 2023 x86_64 x86_64 x86_64
+4. Compiler Version:		gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
+5. NVCC Version:	
+6. GPU ARCH:		
+7. Build Flags:		-Iinclude/ -lm -lgomp -Wall -fopenmp -Ofast -march=native -funroll-loops -mavx2 -mfma -DAVX2
+
+////////////////////////////////////////////////////////
+
+nasm_name: resnet50_B1_T50
+STAGE: Initialization
+	Edge 0 is connected
+	Initialized to device idx: 1
+STAGE: PARTITIONING
+	[EDGE 0] NASM: ../../data/resnet50_B1_T50.nasm
+	[EDGE 0] DNN: ../../data/resnet50_base.aspen
+	[EDGE 0] INPUT: ../../data/batched_input_128.bin
+STAGE: PROFILING COMPUTATION 1
+[Init sequential offload] division ninst idx: 0 from dev: 1 server_id: 1
+		Signaling nasm completion...
+	Total: 4551	Avg Computation Time: 0.541779ms
+STAGE: PROFILING NETWORK
+	[Edge Device 0]connection key: 12534
+	profiling as SERVER...
+STAGE: SCHEDULING - dynamic
+	[Device 1]Init dynamic scheduler
+	[Device 0]Avg server ninst computation time: 0.541779ms
+	[Device 0]Avg edge ninst computation time:   0.212025ms
+	[Device 0]Avg bandwidth: 78.769867Mbps
+	[Device 0]RTT: 5.041003ms
+STAGE: INFERENCE
+Initializing Networking Engine...
+Networking: TCP Server listening on port 8100
+Networking: TCP Server accepted connection from 147.46.118.129
+Networking: TCP Server received EDGE ACK
+[Inference 1] inference: 1/5
+	[Edge Device 0]connection key: 12534
+	[Edge Device 0]time_offset: 0.101168
+[Inference 1] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (0): 0.837244 - 0.124540 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (64/4551)
+	[Edge 0] Transmission latency : 699.976504
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 2] inference: 2/5
+	[Edge Device 0]connection key: 12535
+	[Edge Device 0]time_offset: 0.101712
+[Inference 2] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (1): 1.075434 - 0.096609 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (64/4551)
+	[Edge 0] Transmission latency : 937.467515
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 3] inference: 3/5
+	[Edge Device 0]connection key: 12536
+	[Edge Device 0]time_offset: 0.100187
+[Inference 3] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (2): 1.268609 - 0.103423 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (64/4551)
+	[Edge 0] Transmission latency : 1129.325628
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 4] inference: 4/5
+	[Edge Device 0]connection key: 12537
+	[Edge Device 0]time_offset: 0.098870
+[Inference 4] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (3): 1.472240 - 0.095702 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (64/4551)
+	[Edge 0] Transmission latency : 1336.445928
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 5] inference: 5/5
+	[Edge Device 0]connection key: 12538
+	[Edge Device 0]time_offset: 0.099006
+[Inference 5] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (4): 1.734166 - 0.103888 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (64/4551)
+	[Edge 0] Transmission latency : 1593.362093
+	[Edge 0] Dynamic overhead : 0.000000
+//////////    SERVER command    //////////
+    taskset -c 0-65 ../../coacto --device_mode=0 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/resnet50_B1_T100.nasm --target_dnn_dir=../../data/resnet50_base.aspen --target_input=../../data/batched_input_128.bin --prefix=resnet50 --server_ip=147.46.130.89  --server_port=8100  --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=64 --output_order=cnn --inference_repeat_num=5 --num_edge_devices=1
+//////////    EDGE command    //////////
+    ssh nxc@147.46.118.129 -p 56788 'cd ~/kmbin/CoActo/mobisys24_artifact/fig8 && ../../coacto --device_mode=1 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/resnet50_B1_T100.nasm --target_dnn_dir=../../data/resnet50_base.aspen --target_input=../../data/batched_input_128.bin --prefix=resnet50 --server_ip=147.46.130.89 --server_port=8100 --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=6 --output_order=cnn --inference_repeat_num=5 --num_edge_devices=1'
+    20:42:03: DNN resnet50 Policy dynamic Server core 64 batch size 1 BW 100 (7/20)
+//////////    SERVER Output    //////////
+        
+////////////    PRINTING ASPEN BUILD INFO    ////////////
+
+1. Time of Build:	Thu Apr  4 17:00:26 KST 2024
+2. Build Commit:	commit 0814fa0482bb39856cc903121426113bfdc21ab3
+3. Build System:	Linux 5.15.0-91-generic #101-Ubuntu SMP Tue Nov 14 13:30:08 UTC 2023 x86_64 x86_64 x86_64
+4. Compiler Version:		gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
+5. NVCC Version:	
+6. GPU ARCH:		
+7. Build Flags:		-Iinclude/ -lm -lgomp -Wall -fopenmp -Ofast -march=native -funroll-loops -mavx2 -mfma -DAVX2
+
+////////////////////////////////////////////////////////
+
+nasm_name: resnet50_B1_T100
+STAGE: Initialization
+	Edge 0 is connected
+	Initialized to device idx: 1
+STAGE: PARTITIONING
+	[EDGE 0] NASM: ../../data/resnet50_B1_T100.nasm
+	[EDGE 0] DNN: ../../data/resnet50_base.aspen
+	[EDGE 0] INPUT: ../../data/batched_input_128.bin
+STAGE: PROFILING COMPUTATION 1
+[Init sequential offload] division ninst idx: 0 from dev: 1 server_id: 1
+		Signaling nasm completion...
+	Total: 8473	Avg Computation Time: 0.362591ms
+STAGE: PROFILING NETWORK
+	[Edge Device 0]connection key: 12534
+	profiling as SERVER...
+STAGE: SCHEDULING - dynamic
+	[Device 1]Init dynamic scheduler
+	[Device 0]Avg server ninst computation time: 0.362591ms
+	[Device 0]Avg edge ninst computation time:   0.153226ms
+	[Device 0]Avg bandwidth: 76.116631Mbps
+	[Device 0]RTT: 3.608972ms
+STAGE: INFERENCE
+Initializing Networking Engine...
+Networking: TCP Server listening on port 8100
+Networking: TCP Server accepted connection from 147.46.118.129
+Networking: TCP Server received EDGE ACK
+[Inference 1] inference: 1/5
+	[Edge Device 0]connection key: 12534
+	[Edge Device 0]time_offset: 0.116331
+[Inference 1] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (0): 0.881451 - 0.106736 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (127/8473)
+	[Edge 0] Transmission latency : 726.121962
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 2] inference: 2/5
+	[Edge Device 0]connection key: 12535
+	[Edge Device 0]time_offset: 0.116342
+[Inference 2] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (1): 1.144243 - 0.096261 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (127/8473)
+	[Edge 0] Transmission latency : 991.407454
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 3] inference: 3/5
+	[Edge Device 0]connection key: 12536
+	[Edge Device 0]time_offset: 0.118379
+[Inference 3] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (2): 1.366887 - 0.098994 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (127/8473)
+	[Edge 0] Transmission latency : 1209.659457
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 4] inference: 4/5
+	[Edge Device 0]connection key: 12537
+	[Edge Device 0]time_offset: 0.116868
+[Inference 4] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (3): 1.589018 - 0.097829 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (127/8473)
+	[Edge 0] Transmission latency : 1433.136463
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 5] inference: 5/5
+	[Edge Device 0]connection key: 12538
+	[Edge Device 0]time_offset: 0.115455
+[Inference 5] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (4): 1.864196 - 0.109181 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (127/8473)
+	[Edge 0] Transmission latency : 1707.434058
+	[Edge 0] Dynamic overhead : 0.000000
+//////////    SERVER command    //////////
+    taskset -c 0-65 ../../coacto --device_mode=0 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/resnet50_B1_T200.nasm --target_dnn_dir=../../data/resnet50_base.aspen --target_input=../../data/batched_input_128.bin --prefix=resnet50 --server_ip=147.46.130.89  --server_port=8100  --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=64 --output_order=cnn --inference_repeat_num=5 --num_edge_devices=1
+//////////    EDGE command    //////////
+    ssh nxc@147.46.118.129 -p 56788 'cd ~/kmbin/CoActo/mobisys24_artifact/fig8 && ../../coacto --device_mode=1 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/resnet50_B1_T200.nasm --target_dnn_dir=../../data/resnet50_base.aspen --target_input=../../data/batched_input_128.bin --prefix=resnet50 --server_ip=147.46.130.89 --server_port=8100 --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=6 --output_order=cnn --inference_repeat_num=5 --num_edge_devices=1'
+    20:42:09: DNN resnet50 Policy dynamic Server core 64 batch size 1 BW 100 (8/20)
+//////////    SERVER Output    //////////
+        
+////////////    PRINTING ASPEN BUILD INFO    ////////////
+
+1. Time of Build:	Thu Apr  4 17:00:26 KST 2024
+2. Build Commit:	commit 0814fa0482bb39856cc903121426113bfdc21ab3
+3. Build System:	Linux 5.15.0-91-generic #101-Ubuntu SMP Tue Nov 14 13:30:08 UTC 2023 x86_64 x86_64 x86_64
+4. Compiler Version:		gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
+5. NVCC Version:	
+6. GPU ARCH:		
+7. Build Flags:		-Iinclude/ -lm -lgomp -Wall -fopenmp -Ofast -march=native -funroll-loops -mavx2 -mfma -DAVX2
+
+////////////////////////////////////////////////////////
+
+nasm_name: resnet50_B1_T200
+STAGE: Initialization
+	Edge 0 is connected
+	Initialized to device idx: 1
+STAGE: PARTITIONING
+	[EDGE 0] NASM: ../../data/resnet50_B1_T200.nasm
+	[EDGE 0] DNN: ../../data/resnet50_base.aspen
+	[EDGE 0] INPUT: ../../data/batched_input_128.bin
+STAGE: PROFILING COMPUTATION 1
+[Init sequential offload] division ninst idx: 0 from dev: 1 server_id: 1
+		Signaling nasm completion...
+	Total: 13738	Avg Computation Time: 0.173655ms
+STAGE: PROFILING NETWORK
+	[Edge Device 0]connection key: 12534
+	profiling as SERVER...
+STAGE: SCHEDULING - dynamic
+	[Device 1]Init dynamic scheduler
+	[Device 0]Avg server ninst computation time: 0.173655ms
+	[Device 0]Avg edge ninst computation time:   0.072520ms
+	[Device 0]Avg bandwidth: 72.849968Mbps
+	[Device 0]RTT: 5.694032ms
+STAGE: INFERENCE
+Initializing Networking Engine...
+Networking: TCP Server listening on port 8100
+Networking: TCP Server accepted connection from 147.46.118.129
+Networking: TCP Server received EDGE ACK
+[Inference 1] inference: 1/5
+	[Edge Device 0]connection key: 12534
+	[Edge Device 0]time_offset: 0.113379
+[Inference 1] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (0): 0.831293 - 0.112180 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (246/13738)
+	[Edge 0] Transmission latency : 677.317977
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 2] inference: 2/5
+	[Edge Device 0]connection key: 12535
+	[Edge Device 0]time_offset: 0.114587
+[Inference 2] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (1): 1.113324 - 0.095119 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (246/13738)
+	[Edge 0] Transmission latency : 960.052490
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 3] inference: 3/5
+	[Edge Device 0]connection key: 12536
+	[Edge Device 0]time_offset: 0.113564
+[Inference 3] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (2): 1.323039 - 0.097236 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (246/13738)
+	[Edge 0] Transmission latency : 1167.135477
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 4] inference: 4/5
+	[Edge Device 0]connection key: 12537
+	[Edge Device 0]time_offset: 0.112050
+[Inference 4] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (3): 1.551082 - 0.097094 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (246/13738)
+	[Edge 0] Transmission latency : 1395.653009
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 5] inference: 5/5
+	[Edge Device 0]connection key: 12538
+	[Edge Device 0]time_offset: 0.114446
+[Inference 5] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (4): 1.815227 - 0.096401 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (246/13738)
+	[Edge 0] Transmission latency : 1659.498930
+	[Edge 0] Dynamic overhead : 0.000000
+//////////    SERVER command    //////////
+    taskset -c 0-65 ../../coacto --device_mode=0 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/resnet50_B1_T400.nasm --target_dnn_dir=../../data/resnet50_base.aspen --target_input=../../data/batched_input_128.bin --prefix=resnet50 --server_ip=147.46.130.89  --server_port=8100  --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=64 --output_order=cnn --inference_repeat_num=5 --num_edge_devices=1
+//////////    EDGE command    //////////
+    ssh nxc@147.46.118.129 -p 56788 'cd ~/kmbin/CoActo/mobisys24_artifact/fig8 && ../../coacto --device_mode=1 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/resnet50_B1_T400.nasm --target_dnn_dir=../../data/resnet50_base.aspen --target_input=../../data/batched_input_128.bin --prefix=resnet50 --server_ip=147.46.130.89 --server_port=8100 --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=6 --output_order=cnn --inference_repeat_num=5 --num_edge_devices=1'
+    20:42:15: DNN resnet50 Policy dynamic Server core 64 batch size 1 BW 100 (9/20)
+//////////    SERVER Output    //////////
+        
+////////////    PRINTING ASPEN BUILD INFO    ////////////
+
+1. Time of Build:	Thu Apr  4 17:00:26 KST 2024
+2. Build Commit:	commit 0814fa0482bb39856cc903121426113bfdc21ab3
+3. Build System:	Linux 5.15.0-91-generic #101-Ubuntu SMP Tue Nov 14 13:30:08 UTC 2023 x86_64 x86_64 x86_64
+4. Compiler Version:		gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
+5. NVCC Version:	
+6. GPU ARCH:		
+7. Build Flags:		-Iinclude/ -lm -lgomp -Wall -fopenmp -Ofast -march=native -funroll-loops -mavx2 -mfma -DAVX2
+
+////////////////////////////////////////////////////////
+
+nasm_name: resnet50_B1_T400
+STAGE: Initialization
+	Edge 0 is connected
+	Initialized to device idx: 1
+STAGE: PARTITIONING
+	[EDGE 0] NASM: ../../data/resnet50_B1_T400.nasm
+	[EDGE 0] DNN: ../../data/resnet50_base.aspen
+	[EDGE 0] INPUT: ../../data/batched_input_128.bin
+STAGE: PROFILING COMPUTATION 1
+[Init sequential offload] division ninst idx: 0 from dev: 1 server_id: 1
+		Signaling nasm completion...
+	Total: 18742	Avg Computation Time: 0.157408ms
+STAGE: PROFILING NETWORK
+	[Edge Device 0]connection key: 12534
+	profiling as SERVER...
+STAGE: SCHEDULING - dynamic
+	[Device 1]Init dynamic scheduler
+	[Device 0]Avg server ninst computation time: 0.157408ms
+	[Device 0]Avg edge ninst computation time:   0.050468ms
+	[Device 0]Avg bandwidth: 80.389778Mbps
+	[Device 0]RTT: 5.409032ms
+STAGE: INFERENCE
+Initializing Networking Engine...
+Networking: TCP Server listening on port 8100
+Networking: TCP Server accepted connection from 147.46.118.129
+Networking: TCP Server received EDGE ACK
+[Inference 1] inference: 1/5
+	[Edge Device 0]connection key: 12534
+	[Edge Device 0]time_offset: 0.152498
+[Inference 1] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (0): 0.861260 - 0.144170 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (465/18742)
+	[Edge 0] Transmission latency : 664.979935
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 2] inference: 2/5
+	[Edge Device 0]connection key: 12535
+	[Edge Device 0]time_offset: 0.156095
+[Inference 2] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (1): 1.132347 - 0.107277 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (465/18742)
+	[Edge 0] Transmission latency : 932.909429
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 3] inference: 3/5
+	[Edge Device 0]connection key: 12536
+	[Edge Device 0]time_offset: 0.155051
+[Inference 3] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (2): 1.417401 - 0.105399 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (465/18742)
+	[Edge 0] Transmission latency : 1219.719052
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 4] inference: 4/5
+	[Edge Device 0]connection key: 12537
+	[Edge Device 0]time_offset: 0.156788
+[Inference 4] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (3): 1.719104 - 0.110662 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (465/18742)
+	[Edge 0] Transmission latency : 1519.609332
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 5] inference: 5/5
+	[Edge Device 0]connection key: 12538
+	[Edge Device 0]time_offset: 0.153374
+[Inference 5] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (4): 2.032691 - 0.112139 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (466/18742)
+	[Edge 0] Transmission latency : 1838.248014
+	[Edge 0] Dynamic overhead : 0.000000
+//////////    SERVER command    //////////
+    taskset -c 0-65 ../../coacto --device_mode=0 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/resnet50_B1_T800.nasm --target_dnn_dir=../../data/resnet50_base.aspen --target_input=../../data/batched_input_128.bin --prefix=resnet50 --server_ip=147.46.130.89  --server_port=8100  --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=64 --output_order=cnn --inference_repeat_num=5 --num_edge_devices=1
+//////////    EDGE command    //////////
+    ssh nxc@147.46.118.129 -p 56788 'cd ~/kmbin/CoActo/mobisys24_artifact/fig8 && ../../coacto --device_mode=1 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/resnet50_B1_T800.nasm --target_dnn_dir=../../data/resnet50_base.aspen --target_input=../../data/batched_input_128.bin --prefix=resnet50 --server_ip=147.46.130.89 --server_port=8100 --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=6 --output_order=cnn --inference_repeat_num=5 --num_edge_devices=1'
+    20:42:20: DNN resnet50 Policy dynamic Server core 64 batch size 1 BW 100 (10/20)
+//////////    SERVER Output    //////////
+        
+////////////    PRINTING ASPEN BUILD INFO    ////////////
+
+1. Time of Build:	Thu Apr  4 17:00:26 KST 2024
+2. Build Commit:	commit 0814fa0482bb39856cc903121426113bfdc21ab3
+3. Build System:	Linux 5.15.0-91-generic #101-Ubuntu SMP Tue Nov 14 13:30:08 UTC 2023 x86_64 x86_64 x86_64
+4. Compiler Version:		gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
+5. NVCC Version:	
+6. GPU ARCH:		
+7. Build Flags:		-Iinclude/ -lm -lgomp -Wall -fopenmp -Ofast -march=native -funroll-loops -mavx2 -mfma -DAVX2
+
+////////////////////////////////////////////////////////
+
+nasm_name: resnet50_B1_T800
+STAGE: Initialization
+	Edge 0 is connected
+	Initialized to device idx: 1
+STAGE: PARTITIONING
+	[EDGE 0] NASM: ../../data/resnet50_B1_T800.nasm
+	[EDGE 0] DNN: ../../data/resnet50_base.aspen
+	[EDGE 0] INPUT: ../../data/batched_input_128.bin
+STAGE: PROFILING COMPUTATION 1
+[Init sequential offload] division ninst idx: 0 from dev: 1 server_id: 1
+		Signaling nasm completion...
+	Total: 23305	Avg Computation Time: 0.137204ms
+STAGE: PROFILING NETWORK
+	[Edge Device 0]connection key: 12534
+	profiling as SERVER...
+STAGE: SCHEDULING - dynamic
+	[Device 1]Init dynamic scheduler
+	[Device 0]Avg server ninst computation time: 0.137204ms
+	[Device 0]Avg edge ninst computation time:   0.044225ms
+	[Device 0]Avg bandwidth: 78.564148Mbps
+	[Device 0]RTT: 4.774004ms
+STAGE: INFERENCE
+Initializing Networking Engine...
+Networking: TCP Server listening on port 8100
+Networking: TCP Server accepted connection from 147.46.118.129
+Networking: TCP Server received EDGE ACK
+[Inference 1] inference: 1/5
+	[Edge Device 0]connection key: 12534
+	[Edge Device 0]time_offset: 0.154417
+[Inference 1] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (0): 0.874115 - 0.103774 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (837/23305)
+	[Edge 0] Transmission latency : 676.963568
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 2] inference: 2/5
+	[Edge Device 0]connection key: 12535
+	[Edge Device 0]time_offset: 0.153621
+[Inference 2] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (1): 1.126184 - 0.098084 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (837/23305)
+	[Edge 0] Transmission latency : 930.799067
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 3] inference: 3/5
+	[Edge Device 0]connection key: 12536
+	[Edge Device 0]time_offset: 0.154820
+[Inference 3] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (2): 1.397515 - 0.098534 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (837/23305)
+	[Edge 0] Transmission latency : 1203.252554
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 4] inference: 4/5
+	[Edge Device 0]connection key: 12537
+	[Edge Device 0]time_offset: 0.153296
+[Inference 4] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (3): 1.684014 - 0.100961 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (837/23305)
+	[Edge 0] Transmission latency : 1489.319563
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 5] inference: 5/5
+	[Edge Device 0]connection key: 12538
+	[Edge Device 0]time_offset: 0.154351
+[Inference 5] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (4): 2.030199 - 0.101224 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (837/23305)
+	[Edge 0] Transmission latency : 1835.130453
+	[Edge 0] Dynamic overhead : 0.000000
+//////////    SERVER command    //////////
+    taskset -c 0-65 ../../coacto --device_mode=0 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/bert_base_B1_T50.nasm --target_dnn_dir=../../data/bert_base_base.aspen --target_input=../../data/batched_input_128.bin --prefix=bert_base --server_ip=147.46.130.89  --server_port=8100  --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=64 --output_order=transformer --inference_repeat_num=5 --num_edge_devices=1
+//////////    EDGE command    //////////
+    ssh nxc@147.46.118.129 -p 56788 'cd ~/kmbin/CoActo/mobisys24_artifact/fig8 && ../../coacto --device_mode=1 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/bert_base_B1_T50.nasm --target_dnn_dir=../../data/bert_base_base.aspen --target_input=../../data/batched_input_128.bin --prefix=bert_base --server_ip=147.46.130.89 --server_port=8100 --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=6 --output_order=transformer --inference_repeat_num=5 --num_edge_devices=1'
+    20:42:26: DNN bert_base Policy dynamic Server core 64 batch size 1 BW 100 (11/20)
+//////////    SERVER Output    //////////
+        [0;31m(./src/networking.c:349)Error: recv() failed. ret: -1
+[0mcoacto: ./src/networking.c:350: receive: Assertion `0' failed.
+./run_tests.sh: line 123: 14238 Aborted                 (core dumped) taskset -c 0-65 ../../coacto --device_mode=0 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/bert_base_B1_T50.nasm --target_dnn_dir=../../data/bert_base_base.aspen --target_input=../../data/batched_input_128.bin --prefix=bert_base --server_ip=147.46.130.89 --server_port=8100 --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=64 --output_order=transformer --inference_repeat_num=5 --num_edge_devices=1
+//////////    SERVER command    //////////
+    taskset -c 0-65 ../../coacto --device_mode=0 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/bert_base_B1_T100.nasm --target_dnn_dir=../../data/bert_base_base.aspen --target_input=../../data/batched_input_128.bin --prefix=bert_base --server_ip=147.46.130.89  --server_port=8100  --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=64 --output_order=transformer --inference_repeat_num=5 --num_edge_devices=1
+//////////    EDGE command    //////////
+    ssh nxc@147.46.118.129 -p 56788 'cd ~/kmbin/CoActo/mobisys24_artifact/fig8 && ../../coacto --device_mode=1 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/bert_base_B1_T100.nasm --target_dnn_dir=../../data/bert_base_base.aspen --target_input=../../data/batched_input_128.bin --prefix=bert_base --server_ip=147.46.130.89 --server_port=8100 --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=6 --output_order=transformer --inference_repeat_num=5 --num_edge_devices=1'
+    20:42:33: DNN bert_base Policy dynamic Server core 64 batch size 1 BW 100 (12/20)
+//////////    SERVER Output    //////////
+        
+////////////    PRINTING ASPEN BUILD INFO    ////////////
+
+1. Time of Build:	Thu Apr  4 17:00:26 KST 2024
+2. Build Commit:	commit 0814fa0482bb39856cc903121426113bfdc21ab3
+3. Build System:	Linux 5.15.0-91-generic #101-Ubuntu SMP Tue Nov 14 13:30:08 UTC 2023 x86_64 x86_64 x86_64
+4. Compiler Version:		gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
+5. NVCC Version:	
+6. GPU ARCH:		
+7. Build Flags:		-Iinclude/ -lm -lgomp -Wall -fopenmp -Ofast -march=native -funroll-loops -mavx2 -mfma -DAVX2
+
+////////////////////////////////////////////////////////
+
+nasm_name: bert_base_B1_T100
+STAGE: Initialization
+	Edge 0 is connected
+	Initialized to device idx: 1
+STAGE: PARTITIONING
+	[EDGE 0] NASM: ../../data/bert_base_B1_T100.nasm
+	[EDGE 0] DNN: ../../data/bert_base_base.aspen
+	[EDGE 0] INPUT: ../../data/batched_input_128.bin
+STAGE: PROFILING COMPUTATION 1
+[Init sequential offload] division ninst idx: 0 from dev: 1 server_id: 1
+		Signaling nasm completion...
+	Total: 18564	Avg Computation Time: 0.513354ms
+STAGE: PROFILING NETWORK
+	[Edge Device 0]connection key: 12534
+	profiling as SERVER...
+STAGE: SCHEDULING - dynamic
+	[Device 1]Init dynamic scheduler
+	[Device 0]Avg server ninst computation time: 0.513354ms
+	[Device 0]Avg edge ninst computation time:   0.160158ms
+	[Device 0]Avg bandwidth: 80.781166Mbps
+	[Device 0]RTT: 11.128902ms
+STAGE: INFERENCE
+Initializing Networking Engine...
+Networking: TCP Server listening on port 8100
+Networking: TCP Server accepted connection from 147.46.118.129
+Networking: TCP Server received EDGE ACK
+[Inference 1] inference: 1/5
+	[Edge Device 0]connection key: 12534
+	[Edge Device 0]time_offset: 0.617104
+[Inference 1] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (0): 1.784398 - 0.241348 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (132/18564)
+	[Edge 0] Transmission latency : 966.930032
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 2] inference: 2/5
+	[Edge Device 0]connection key: 12535
+	[Edge Device 0]time_offset: 0.615786
+[Inference 2] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (1): 2.415976 - 0.231194 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (132/18564)
+	[Edge 0] Transmission latency : 1612.203360
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 3] inference: 3/5
+	[Edge Device 0]connection key: 12536
+	[Edge Device 0]time_offset: 0.615496
+[Inference 3] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (2): 2.819102 - 0.210389 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (132/18564)
+	[Edge 0] Transmission latency : 2028.789759
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 4] inference: 4/5
+	[Edge Device 0]connection key: 12537
+	[Edge Device 0]time_offset: 0.616318
+[Inference 4] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (3): 3.213170 - 0.215285 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (132/18564)
+	[Edge 0] Transmission latency : 2421.255589
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 5] inference: 5/5
+	[Edge Device 0]connection key: 12538
+	[Edge Device 0]time_offset: 0.615673
+[Inference 5] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (4): 3.613746 - 0.217858 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (132/18564)
+	[Edge 0] Transmission latency : 2823.506117
+	[Edge 0] Dynamic overhead : 0.000000
+//////////    SERVER command    //////////
+    taskset -c 0-65 ../../coacto --device_mode=0 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/bert_base_B1_T200.nasm --target_dnn_dir=../../data/bert_base_base.aspen --target_input=../../data/batched_input_128.bin --prefix=bert_base --server_ip=147.46.130.89  --server_port=8100  --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=64 --output_order=transformer --inference_repeat_num=5 --num_edge_devices=1
+//////////    EDGE command    //////////
+    ssh nxc@147.46.118.129 -p 56788 'cd ~/kmbin/CoActo/mobisys24_artifact/fig8 && ../../coacto --device_mode=1 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/bert_base_B1_T200.nasm --target_dnn_dir=../../data/bert_base_base.aspen --target_input=../../data/batched_input_128.bin --prefix=bert_base --server_ip=147.46.130.89 --server_port=8100 --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=6 --output_order=transformer --inference_repeat_num=5 --num_edge_devices=1'
+    20:42:41: DNN bert_base Policy dynamic Server core 64 batch size 1 BW 100 (13/20)
+//////////    SERVER Output    //////////
+        
+////////////    PRINTING ASPEN BUILD INFO    ////////////
+
+1. Time of Build:	Thu Apr  4 17:00:26 KST 2024
+2. Build Commit:	commit 0814fa0482bb39856cc903121426113bfdc21ab3
+3. Build System:	Linux 5.15.0-91-generic #101-Ubuntu SMP Tue Nov 14 13:30:08 UTC 2023 x86_64 x86_64 x86_64
+4. Compiler Version:		gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
+5. NVCC Version:	
+6. GPU ARCH:		
+7. Build Flags:		-Iinclude/ -lm -lgomp -Wall -fopenmp -Ofast -march=native -funroll-loops -mavx2 -mfma -DAVX2
+
+////////////////////////////////////////////////////////
+
+nasm_name: bert_base_B1_T200
+STAGE: Initialization
+	Edge 0 is connected
+	Initialized to device idx: 1
+STAGE: PARTITIONING
+	[EDGE 0] NASM: ../../data/bert_base_B1_T200.nasm
+	[EDGE 0] DNN: ../../data/bert_base_base.aspen
+	[EDGE 0] INPUT: ../../data/batched_input_128.bin
+STAGE: PROFILING COMPUTATION 1
+[Init sequential offload] division ninst idx: 0 from dev: 1 server_id: 1
+		Signaling nasm completion...
+	Total: 28836	Avg Computation Time: 0.383585ms
+STAGE: PROFILING NETWORK
+	[Edge Device 0]connection key: 12534
+	profiling as SERVER...
+STAGE: SCHEDULING - dynamic
+	[Device 1]Init dynamic scheduler
+	[Device 0]Avg server ninst computation time: 0.383585ms
+	[Device 0]Avg edge ninst computation time:   0.107762ms
+	[Device 0]Avg bandwidth: 55.318180Mbps
+	[Device 0]RTT: 7.432103ms
+STAGE: INFERENCE
+Initializing Networking Engine...
+Networking: TCP Server listening on port 8100
+Networking: TCP Server accepted connection from 147.46.118.129
+Networking: TCP Server received EDGE ACK
+[Inference 1] inference: 1/5
+	[Edge Device 0]connection key: 12534
+	[Edge Device 0]time_offset: 0.550098
+[Inference 1] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (0): 1.873557 - 0.266575 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (137/28836)
+	[Edge 0] Transmission latency : 1121.562004
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 2] inference: 2/5
+	[Edge Device 0]connection key: 12535
+	[Edge Device 0]time_offset: 0.549809
+[Inference 2] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (1): 2.368481 - 0.230813 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (142/28836)
+	[Edge 0] Transmission latency : 1620.470285
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 3] inference: 3/5
+	[Edge Device 0]connection key: 12536
+	[Edge Device 0]time_offset: 0.549345
+[Inference 3] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (2): 2.857657 - 0.235934 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (138/28836)
+	[Edge 0] Transmission latency : 2112.776995
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 4] inference: 4/5
+	[Edge Device 0]connection key: 12537
+	[Edge Device 0]time_offset: 0.549149
+[Inference 4] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (3): 3.271075 - 0.235562 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (137/28836)
+	[Edge 0] Transmission latency : 2529.871464
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 5] inference: 5/5
+	[Edge Device 0]connection key: 12538
+	[Edge Device 0]time_offset: 0.549415
+[Inference 5] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (4): 3.946394 - 0.258569 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (135/28836)
+	[Edge 0] Transmission latency : 3191.117287
+	[Edge 0] Dynamic overhead : 0.000000
+//////////    SERVER command    //////////
+    taskset -c 0-65 ../../coacto --device_mode=0 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/bert_base_B1_T400.nasm --target_dnn_dir=../../data/bert_base_base.aspen --target_input=../../data/batched_input_128.bin --prefix=bert_base --server_ip=147.46.130.89  --server_port=8100  --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=64 --output_order=transformer --inference_repeat_num=5 --num_edge_devices=1
+//////////    EDGE command    //////////
+    ssh nxc@147.46.118.129 -p 56788 'cd ~/kmbin/CoActo/mobisys24_artifact/fig8 && ../../coacto --device_mode=1 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/bert_base_B1_T400.nasm --target_dnn_dir=../../data/bert_base_base.aspen --target_input=../../data/batched_input_128.bin --prefix=bert_base --server_ip=147.46.130.89 --server_port=8100 --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=6 --output_order=transformer --inference_repeat_num=5 --num_edge_devices=1'
+    20:42:49: DNN bert_base Policy dynamic Server core 64 batch size 1 BW 100 (14/20)
+//////////    SERVER Output    //////////
+        
+////////////    PRINTING ASPEN BUILD INFO    ////////////
+
+1. Time of Build:	Thu Apr  4 17:00:26 KST 2024
+2. Build Commit:	commit 0814fa0482bb39856cc903121426113bfdc21ab3
+3. Build System:	Linux 5.15.0-91-generic #101-Ubuntu SMP Tue Nov 14 13:30:08 UTC 2023 x86_64 x86_64 x86_64
+4. Compiler Version:		gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
+5. NVCC Version:	
+6. GPU ARCH:		
+7. Build Flags:		-Iinclude/ -lm -lgomp -Wall -fopenmp -Ofast -march=native -funroll-loops -mavx2 -mfma -DAVX2
+
+////////////////////////////////////////////////////////
+
+nasm_name: bert_base_B1_T400
+STAGE: Initialization
+	Edge 0 is connected
+	Initialized to device idx: 1
+STAGE: PARTITIONING
+	[EDGE 0] NASM: ../../data/bert_base_B1_T400.nasm
+	[EDGE 0] DNN: ../../data/bert_base_base.aspen
+	[EDGE 0] INPUT: ../../data/batched_input_128.bin
+STAGE: PROFILING COMPUTATION 1
+[Init sequential offload] division ninst idx: 0 from dev: 1 server_id: 1
+		Signaling nasm completion...
+	Total: 61956	Avg Computation Time: 0.187055ms
+STAGE: PROFILING NETWORK
+	[Edge Device 0]connection key: 12534
+	profiling as SERVER...
+STAGE: SCHEDULING - dynamic
+	[Device 1]Init dynamic scheduler
+	[Device 0]Avg server ninst computation time: 0.187055ms
+	[Device 0]Avg edge ninst computation time:   0.044774ms
+	[Device 0]Avg bandwidth: 85.200058Mbps
+	[Device 0]RTT: 3.822923ms
+STAGE: INFERENCE
+Initializing Networking Engine...
+Networking: TCP Server listening on port 8100
+Networking: TCP Server accepted connection from 147.46.118.129
+Networking: TCP Server received EDGE ACK
+[Inference 1] inference: 1/5
+	[Edge Device 0]connection key: 12534
+	[Edge Device 0]time_offset: 0.841084
+[Inference 1] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (0): 1.935530 - 0.271550 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (132/61956)
+	[Edge 0] Transmission latency : 864.430487
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 2] inference: 2/5
+	[Edge Device 0]connection key: 12535
+	[Edge Device 0]time_offset: 0.841020
+[Inference 2] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (1): 2.729815 - 0.251372 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (132/61956)
+	[Edge 0] Transmission latency : 1674.129367
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 3] inference: 3/5
+	[Edge Device 0]connection key: 12536
+	[Edge Device 0]time_offset: 0.841142
+[Inference 3] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (2): 3.431997 - 0.241680 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (135/61956)
+	[Edge 0] Transmission latency : 2379.456758
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 4] inference: 4/5
+	[Edge Device 0]connection key: 12537
+	[Edge Device 0]time_offset: 0.840394
+[Inference 4] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (3): 3.948224 - 0.254083 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (132/61956)
+	[Edge 0] Transmission latency : 2887.195110
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 5] inference: 5/5
+	[Edge Device 0]connection key: 12538
+	[Edge Device 0]time_offset: 0.841047
+[Inference 5] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (4): 4.452506 - 0.261375 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (132/61956)
+	[Edge 0] Transmission latency : 3397.467613
+	[Edge 0] Dynamic overhead : 0.000000
+//////////    SERVER command    //////////
+    taskset -c 0-65 ../../coacto --device_mode=0 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/bert_base_B1_T800.nasm --target_dnn_dir=../../data/bert_base_base.aspen --target_input=../../data/batched_input_128.bin --prefix=bert_base --server_ip=147.46.130.89  --server_port=8100  --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=64 --output_order=transformer --inference_repeat_num=5 --num_edge_devices=1
+//////////    EDGE command    //////////
+    ssh nxc@147.46.118.129 -p 56788 'cd ~/kmbin/CoActo/mobisys24_artifact/fig8 && ../../coacto --device_mode=1 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/bert_base_B1_T800.nasm --target_dnn_dir=../../data/bert_base_base.aspen --target_input=../../data/batched_input_128.bin --prefix=bert_base --server_ip=147.46.130.89 --server_port=8100 --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=6 --output_order=transformer --inference_repeat_num=5 --num_edge_devices=1'
+    20:42:59: DNN bert_base Policy dynamic Server core 64 batch size 1 BW 100 (15/20)
+//////////    SERVER Output    //////////
+        
+////////////    PRINTING ASPEN BUILD INFO    ////////////
+
+1. Time of Build:	Thu Apr  4 17:00:26 KST 2024
+2. Build Commit:	commit 0814fa0482bb39856cc903121426113bfdc21ab3
+3. Build System:	Linux 5.15.0-91-generic #101-Ubuntu SMP Tue Nov 14 13:30:08 UTC 2023 x86_64 x86_64 x86_64
+4. Compiler Version:		gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
+5. NVCC Version:	
+6. GPU ARCH:		
+7. Build Flags:		-Iinclude/ -lm -lgomp -Wall -fopenmp -Ofast -march=native -funroll-loops -mavx2 -mfma -DAVX2
+
+////////////////////////////////////////////////////////
+
+nasm_name: bert_base_B1_T800
+STAGE: Initialization
+	Edge 0 is connected
+	Initialized to device idx: 1
+STAGE: PARTITIONING
+	[EDGE 0] NASM: ../../data/bert_base_B1_T800.nasm
+	[EDGE 0] DNN: ../../data/bert_base_base.aspen
+	[EDGE 0] INPUT: ../../data/batched_input_128.bin
+STAGE: PROFILING COMPUTATION 1
+[Init sequential offload] division ninst idx: 0 from dev: 1 server_id: 1
+		Signaling nasm completion...
+	Total: 71172	Avg Computation Time: 0.163109ms
+STAGE: PROFILING NETWORK
+	[Edge Device 0]connection key: 12534
+	profiling as SERVER...
+STAGE: SCHEDULING - dynamic
+	[Device 1]Init dynamic scheduler
+	[Device 0]Avg server ninst computation time: 0.163109ms
+	[Device 0]Avg edge ninst computation time:   0.044155ms
+	[Device 0]Avg bandwidth: 70.984131Mbps
+	[Device 0]RTT: 6.659031ms
+STAGE: INFERENCE
+Initializing Networking Engine...
+Networking: TCP Server listening on port 8100
+Networking: TCP Server accepted connection from 147.46.118.129
+Networking: TCP Server received EDGE ACK
+[Inference 1] inference: 1/5
+	[Edge Device 0]connection key: 12534
+	[Edge Device 0]time_offset: 1.171459
+[Inference 1] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (0): 2.454949 - 0.271329 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (132/71172)
+	[Edge 0] Transmission latency : 1054.502606
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 2] inference: 2/5
+	[Edge Device 0]connection key: 12535
+	[Edge Device 0]time_offset: 1.173562
+[Inference 2] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (1): 3.234928 - 0.276251 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (138/71172)
+	[Edge 0] Transmission latency : 1817.861438
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 3] inference: 3/5
+	[Edge Device 0]connection key: 12536
+	[Edge Device 0]time_offset: 1.171059
+[Inference 3] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (2): 3.921072 - 0.255013 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (132/71172)
+	[Edge 0] Transmission latency : 2525.446415
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 4] inference: 4/5
+	[Edge Device 0]connection key: 12537
+	[Edge Device 0]time_offset: 1.171870
+[Inference 4] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (3): 4.557508 - 0.255063 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (132/71172)
+	[Edge 0] Transmission latency : 3161.031723
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 5] inference: 5/5
+	[Edge Device 0]connection key: 12538
+	[Edge Device 0]time_offset: 1.172796
+[Inference 5] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (4): 5.084523 - 0.258012 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (146/71172)
+	[Edge 0] Transmission latency : 3684.971571
+	[Edge 0] Dynamic overhead : 0.000000
+//////////    SERVER command    //////////
+    taskset -c 0-65 ../../coacto --device_mode=0 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/yolov3_B1_T50.nasm --target_dnn_dir=../../data/yolov3_base.aspen --target_input=../../data/batched_input_128.bin --prefix=yolov3 --server_ip=147.46.130.89  --server_port=8100  --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=64 --output_order=cnn --inference_repeat_num=5 --num_edge_devices=1
+//////////    EDGE command    //////////
+    ssh nxc@147.46.118.129 -p 56788 'cd ~/kmbin/CoActo/mobisys24_artifact/fig8 && ../../coacto --device_mode=1 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/yolov3_B1_T50.nasm --target_dnn_dir=../../data/yolov3_base.aspen --target_input=../../data/batched_input_128.bin --prefix=yolov3 --server_ip=147.46.130.89 --server_port=8100 --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=6 --output_order=cnn --inference_repeat_num=5 --num_edge_devices=1'
+    20:43:09: DNN yolov3 Policy dynamic Server core 64 batch size 1 BW 100 (16/20)
+//////////    SERVER Output    //////////
+        
+////////////    PRINTING ASPEN BUILD INFO    ////////////
+
+1. Time of Build:	Thu Apr  4 17:00:26 KST 2024
+2. Build Commit:	commit 0814fa0482bb39856cc903121426113bfdc21ab3
+3. Build System:	Linux 5.15.0-91-generic #101-Ubuntu SMP Tue Nov 14 13:30:08 UTC 2023 x86_64 x86_64 x86_64
+4. Compiler Version:		gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
+5. NVCC Version:	
+6. GPU ARCH:		
+7. Build Flags:		-Iinclude/ -lm -lgomp -Wall -fopenmp -Ofast -march=native -funroll-loops -mavx2 -mfma -DAVX2
+
+////////////////////////////////////////////////////////
+
+nasm_name: yolov3_B1_T50
+STAGE: Initialization
+	Edge 0 is connected
+	Initialized to device idx: 1
+STAGE: PARTITIONING
+	[EDGE 0] NASM: ../../data/yolov3_B1_T50.nasm
+	[EDGE 0] DNN: ../../data/yolov3_base.aspen
+	[EDGE 0] INPUT: ../../data/batched_input_128.bin
+STAGE: PROFILING COMPUTATION 1
+[Init sequential offload] division ninst idx: 0 from dev: 1 server_id: 1
+		Signaling nasm completion...
+	Total: 6224	Avg Computation Time: 1.434642ms
+STAGE: PROFILING NETWORK
+	[Edge Device 0]connection key: 12534
+	profiling as SERVER...
+STAGE: SCHEDULING - dynamic
+	[Device 1]Init dynamic scheduler
+	[Device 0]Avg server ninst computation time: 1.434642ms
+	[Device 0]Avg edge ninst computation time:   0.990503ms
+	[Device 0]Avg bandwidth: 84.343018Mbps
+	[Device 0]RTT: 3.108859ms
+STAGE: INFERENCE
+Initializing Networking Engine...
+Networking: TCP Server listening on port 8100
+Networking: TCP Server accepted connection from 147.46.118.129
+Networking: TCP Server received EDGE ACK
+[Inference 1] inference: 1/5
+	[Edge Device 0]connection key: 12534
+	[Edge Device 0]time_offset: 0.195944
+[Inference 1] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (0): 2.019667 - 0.416934 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (64/6224)
+	[Edge 0] Transmission latency : 1614.580035
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 2] inference: 2/5
+	[Edge Device 0]connection key: 12535
+	[Edge Device 0]time_offset: 0.193248
+[Inference 2] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (1): 2.636863 - 0.405026 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (64/6224)
+	[Edge 0] Transmission latency : 2232.723475
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 3] inference: 3/5
+	[Edge Device 0]connection key: 12536
+	[Edge Device 0]time_offset: 0.195074
+[Inference 3] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (2): 3.193450 - 0.413232 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (64/6224)
+	[Edge 0] Transmission latency : 2776.093721
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 4] inference: 4/5
+	[Edge Device 0]connection key: 12537
+	[Edge Device 0]time_offset: 0.195716
+[Inference 4] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (3): 3.896323 - 0.395477 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (64/6224)
+	[Edge 0] Transmission latency : 3501.468182
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 5] inference: 5/5
+	[Edge Device 0]connection key: 12538
+	[Edge Device 0]time_offset: 0.197696
+[Inference 5] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (4): 4.555852 - 0.400879 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (64/6224)
+	[Edge 0] Transmission latency : 4148.616791
+	[Edge 0] Dynamic overhead : 0.000000
+//////////    SERVER command    //////////
+    taskset -c 0-65 ../../coacto --device_mode=0 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/yolov3_B1_T100.nasm --target_dnn_dir=../../data/yolov3_base.aspen --target_input=../../data/batched_input_128.bin --prefix=yolov3 --server_ip=147.46.130.89  --server_port=8100  --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=64 --output_order=cnn --inference_repeat_num=5 --num_edge_devices=1
+//////////    EDGE command    //////////
+    ssh nxc@147.46.118.129 -p 56788 'cd ~/kmbin/CoActo/mobisys24_artifact/fig8 && ../../coacto --device_mode=1 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/yolov3_B1_T100.nasm --target_dnn_dir=../../data/yolov3_base.aspen --target_input=../../data/batched_input_128.bin --prefix=yolov3 --server_ip=147.46.130.89 --server_port=8100 --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=6 --output_order=cnn --inference_repeat_num=5 --num_edge_devices=1'
+    20:43:17: DNN yolov3 Policy dynamic Server core 64 batch size 1 BW 100 (17/20)
+//////////    SERVER Output    //////////
+        
+////////////    PRINTING ASPEN BUILD INFO    ////////////
+
+1. Time of Build:	Thu Apr  4 17:00:26 KST 2024
+2. Build Commit:	commit 0814fa0482bb39856cc903121426113bfdc21ab3
+3. Build System:	Linux 5.15.0-91-generic #101-Ubuntu SMP Tue Nov 14 13:30:08 UTC 2023 x86_64 x86_64 x86_64
+4. Compiler Version:		gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
+5. NVCC Version:	
+6. GPU ARCH:		
+7. Build Flags:		-Iinclude/ -lm -lgomp -Wall -fopenmp -Ofast -march=native -funroll-loops -mavx2 -mfma -DAVX2
+
+////////////////////////////////////////////////////////
+
+nasm_name: yolov3_B1_T100
+STAGE: Initialization
+	Edge 0 is connected
+	Initialized to device idx: 1
+STAGE: PARTITIONING
+	[EDGE 0] NASM: ../../data/yolov3_B1_T100.nasm
+	[EDGE 0] DNN: ../../data/yolov3_base.aspen
+	[EDGE 0] INPUT: ../../data/batched_input_128.bin
+STAGE: PROFILING COMPUTATION 1
+[Init sequential offload] division ninst idx: 0 from dev: 1 server_id: 1
+		Signaling nasm completion...
+	Total: 11736	Avg Computation Time: 1.035665ms
+STAGE: PROFILING NETWORK
+	[Edge Device 0]connection key: 12534
+	profiling as SERVER...
+STAGE: SCHEDULING - dynamic
+	[Device 1]Init dynamic scheduler
+	[Device 0]Avg server ninst computation time: 1.035665ms
+	[Device 0]Avg edge ninst computation time:   0.498651ms
+	[Device 0]Avg bandwidth: 81.686714Mbps
+	[Device 0]RTT: 3.661036ms
+STAGE: INFERENCE
+Initializing Networking Engine...
+Networking: TCP Server listening on port 8100
+Networking: TCP Server accepted connection from 147.46.118.129
+Networking: TCP Server received EDGE ACK
+[Inference 1] inference: 1/5
+	[Edge Device 0]connection key: 12534
+	[Edge Device 0]time_offset: 0.321250
+[Inference 1] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (0): 2.048447 - 0.395958 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (128/11736)
+	[Edge 0] Transmission latency : 1530.714989
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 2] inference: 2/5
+	[Edge Device 0]connection key: 12535
+	[Edge Device 0]time_offset: 0.319510
+[Inference 2] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (1): 2.754093 - 0.406972 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (128/11736)
+	[Edge 0] Transmission latency : 2228.084564
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 3] inference: 3/5
+	[Edge Device 0]connection key: 12536
+	[Edge Device 0]time_offset: 0.318002
+[Inference 3] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (2): 3.348119 - 0.388597 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (128/11736)
+	[Edge 0] Transmission latency : 2829.617500
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 4] inference: 4/5
+	[Edge Device 0]connection key: 12537
+	[Edge Device 0]time_offset: 0.324869
+[Inference 4] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (3): 3.921250 - 0.386042 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (128/11736)
+	[Edge 0] Transmission latency : 3397.254229
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 5] inference: 5/5
+	[Edge Device 0]connection key: 12538
+	[Edge Device 0]time_offset: 0.321197
+[Inference 5] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (4): 4.510944 - 0.379239 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (128/11736)
+	[Edge 0] Transmission latency : 3999.466896
+	[Edge 0] Dynamic overhead : 0.000000
+//////////    SERVER command    //////////
+    taskset -c 0-65 ../../coacto --device_mode=0 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/yolov3_B1_T200.nasm --target_dnn_dir=../../data/yolov3_base.aspen --target_input=../../data/batched_input_128.bin --prefix=yolov3 --server_ip=147.46.130.89  --server_port=8100  --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=64 --output_order=cnn --inference_repeat_num=5 --num_edge_devices=1
+//////////    EDGE command    //////////
+    ssh nxc@147.46.118.129 -p 56788 'cd ~/kmbin/CoActo/mobisys24_artifact/fig8 && ../../coacto --device_mode=1 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/yolov3_B1_T200.nasm --target_dnn_dir=../../data/yolov3_base.aspen --target_input=../../data/batched_input_128.bin --prefix=yolov3 --server_ip=147.46.130.89 --server_port=8100 --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=6 --output_order=cnn --inference_repeat_num=5 --num_edge_devices=1'
+    20:43:26: DNN yolov3 Policy dynamic Server core 64 batch size 1 BW 100 (18/20)
+//////////    SERVER Output    //////////
+        
+////////////    PRINTING ASPEN BUILD INFO    ////////////
+
+1. Time of Build:	Thu Apr  4 17:00:26 KST 2024
+2. Build Commit:	commit 0814fa0482bb39856cc903121426113bfdc21ab3
+3. Build System:	Linux 5.15.0-91-generic #101-Ubuntu SMP Tue Nov 14 13:30:08 UTC 2023 x86_64 x86_64 x86_64
+4. Compiler Version:		gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
+5. NVCC Version:	
+6. GPU ARCH:		
+7. Build Flags:		-Iinclude/ -lm -lgomp -Wall -fopenmp -Ofast -march=native -funroll-loops -mavx2 -mfma -DAVX2
+
+////////////////////////////////////////////////////////
+
+nasm_name: yolov3_B1_T200
+STAGE: Initialization
+	Edge 0 is connected
+	Initialized to device idx: 1
+STAGE: PARTITIONING
+	[EDGE 0] NASM: ../../data/yolov3_B1_T200.nasm
+	[EDGE 0] DNN: ../../data/yolov3_base.aspen
+	[EDGE 0] INPUT: ../../data/batched_input_128.bin
+STAGE: PROFILING COMPUTATION 1
+[Init sequential offload] division ninst idx: 0 from dev: 1 server_id: 1
+		Signaling nasm completion...
+	Total: 22402	Avg Computation Time: 0.640910ms
+STAGE: PROFILING NETWORK
+	[Edge Device 0]connection key: 12534
+	profiling as SERVER...
+STAGE: SCHEDULING - dynamic
+	[Device 1]Init dynamic scheduler
+	[Device 0]Avg server ninst computation time: 0.640910ms
+	[Device 0]Avg edge ninst computation time:   0.242461ms
+	[Device 0]Avg bandwidth: 70.482727Mbps
+	[Device 0]RTT: 3.931999ms
+STAGE: INFERENCE
+Initializing Networking Engine...
+Networking: TCP Server listening on port 8100
+Networking: TCP Server accepted connection from 147.46.118.129
+Networking: TCP Server received EDGE ACK
+[Inference 1] inference: 1/5
+	[Edge Device 0]connection key: 12534
+	[Edge Device 0]time_offset: 0.330852
+[Inference 1] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (0): 2.084425 - 0.413508 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (254/22402)
+	[Edge 0] Transmission latency : 1545.410991
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 2] inference: 2/5
+	[Edge Device 0]connection key: 12535
+	[Edge Device 0]time_offset: 0.330981
+[Inference 2] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (1): 2.774564 - 0.432926 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (254/22402)
+	[Edge 0] Transmission latency : 2199.225426
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 3] inference: 3/5
+	[Edge Device 0]connection key: 12536
+	[Edge Device 0]time_offset: 0.330659
+[Inference 3] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (2): 3.367511 - 0.410111 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (254/22402)
+	[Edge 0] Transmission latency : 2812.234163
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 4] inference: 4/5
+	[Edge Device 0]connection key: 12537
+	[Edge Device 0]time_offset: 0.329146
+[Inference 4] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (3): 4.020240 - 0.423706 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (254/22402)
+	[Edge 0] Transmission latency : 3459.612846
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 5] inference: 5/5
+	[Edge Device 0]connection key: 12538
+	[Edge Device 0]time_offset: 0.328624
+[Inference 5] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (4): 4.662653 - 0.420278 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (254/22402)
+	[Edge 0] Transmission latency : 4100.357056
+	[Edge 0] Dynamic overhead : 0.000000
+//////////    SERVER command    //////////
+    taskset -c 0-65 ../../coacto --device_mode=0 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/yolov3_B1_T400.nasm --target_dnn_dir=../../data/yolov3_base.aspen --target_input=../../data/batched_input_128.bin --prefix=yolov3 --server_ip=147.46.130.89  --server_port=8100  --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=64 --output_order=cnn --inference_repeat_num=5 --num_edge_devices=1
+//////////    EDGE command    //////////
+    ssh nxc@147.46.118.129 -p 56788 'cd ~/kmbin/CoActo/mobisys24_artifact/fig8 && ../../coacto --device_mode=1 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/yolov3_B1_T400.nasm --target_dnn_dir=../../data/yolov3_base.aspen --target_input=../../data/batched_input_128.bin --prefix=yolov3 --server_ip=147.46.130.89 --server_port=8100 --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=6 --output_order=cnn --inference_repeat_num=5 --num_edge_devices=1'
+    20:43:35: DNN yolov3 Policy dynamic Server core 64 batch size 1 BW 100 (19/20)
+//////////    SERVER Output    //////////
+        
+////////////    PRINTING ASPEN BUILD INFO    ////////////
+
+1. Time of Build:	Thu Apr  4 17:00:26 KST 2024
+2. Build Commit:	commit 0814fa0482bb39856cc903121426113bfdc21ab3
+3. Build System:	Linux 5.15.0-91-generic #101-Ubuntu SMP Tue Nov 14 13:30:08 UTC 2023 x86_64 x86_64 x86_64
+4. Compiler Version:		gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
+5. NVCC Version:	
+6. GPU ARCH:		
+7. Build Flags:		-Iinclude/ -lm -lgomp -Wall -fopenmp -Ofast -march=native -funroll-loops -mavx2 -mfma -DAVX2
+
+////////////////////////////////////////////////////////
+
+nasm_name: yolov3_B1_T400
+STAGE: Initialization
+	Edge 0 is connected
+	Initialized to device idx: 1
+STAGE: PARTITIONING
+	[EDGE 0] NASM: ../../data/yolov3_B1_T400.nasm
+	[EDGE 0] DNN: ../../data/yolov3_base.aspen
+	[EDGE 0] INPUT: ../../data/batched_input_128.bin
+STAGE: PROFILING COMPUTATION 1
+[Init sequential offload] division ninst idx: 0 from dev: 1 server_id: 1
+		Signaling nasm completion...
+	Total: 37302	Avg Computation Time: 0.395373ms
+STAGE: PROFILING NETWORK
+	[Edge Device 0]connection key: 12534
+	profiling as SERVER...
+STAGE: SCHEDULING - dynamic
+	[Device 1]Init dynamic scheduler
+	[Device 0]Avg server ninst computation time: 0.395373ms
+	[Device 0]Avg edge ninst computation time:   0.163278ms
+	[Device 0]Avg bandwidth: 72.243027Mbps
+	[Device 0]RTT: 5.637765ms
+STAGE: INFERENCE
+Initializing Networking Engine...
+Networking: TCP Server listening on port 8100
+Networking: TCP Server accepted connection from 147.46.118.129
+Networking: TCP Server received EDGE ACK
+[Inference 1] inference: 1/5
+	[Edge Device 0]connection key: 12534
+	[Edge Device 0]time_offset: 0.458084
+[Inference 1] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (0): 2.387117 - 0.468087 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (498/37302)
+	[Edge 0] Transmission latency : 1674.836516
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 2] inference: 2/5
+	[Edge Device 0]connection key: 12535
+	[Edge Device 0]time_offset: 0.459287
+[Inference 2] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (1): 3.202288 - 0.431926 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (498/37302)
+	[Edge 0] Transmission latency : 2501.092196
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 3] inference: 3/5
+	[Edge Device 0]connection key: 12536
+	[Edge Device 0]time_offset: 0.458780
+[Inference 3] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (2): 3.867518 - 0.451836 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (498/37302)
+	[Edge 0] Transmission latency : 3157.578230
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 4] inference: 4/5
+	[Edge Device 0]connection key: 12537
+	[Edge Device 0]time_offset: 0.456037
+[Inference 4] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (3): 4.762687 - 0.476007 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (498/37302)
+	[Edge 0] Transmission latency : 4035.414219
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 5] inference: 5/5
+	[Edge Device 0]connection key: 12538
+	[Edge Device 0]time_offset: 0.457967
+[Inference 5] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (4): 5.413708 - 0.425365 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (498/37302)
+	[Edge 0] Transmission latency : 4725.263596
+	[Edge 0] Dynamic overhead : 0.000000
+//////////    SERVER command    //////////
+    taskset -c 0-65 ../../coacto --device_mode=0 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/yolov3_B1_T800.nasm --target_dnn_dir=../../data/yolov3_base.aspen --target_input=../../data/batched_input_128.bin --prefix=yolov3 --server_ip=147.46.130.89  --server_port=8100  --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=64 --output_order=cnn --inference_repeat_num=5 --num_edge_devices=1
+//////////    EDGE command    //////////
+    ssh nxc@147.46.118.129 -p 56788 'cd ~/kmbin/CoActo/mobisys24_artifact/fig8 && ../../coacto --device_mode=1 --dirname=Test_SERVER_nxc-3990x_2024-04-04-20:41:10 --target_nasm_dir=../../data/yolov3_B1_T800.nasm --target_dnn_dir=../../data/yolov3_base.aspen --target_input=../../data/batched_input_128.bin --prefix=yolov3 --server_ip=147.46.130.89 --server_port=8100 --schedule_policy=dynamic --sched_sequential_idx=1 --dse_num=6 --output_order=cnn --inference_repeat_num=5 --num_edge_devices=1'
+    20:43:44: DNN yolov3 Policy dynamic Server core 64 batch size 1 BW 100 (20/20)
+//////////    SERVER Output    //////////
+        
+////////////    PRINTING ASPEN BUILD INFO    ////////////
+
+1. Time of Build:	Thu Apr  4 17:00:26 KST 2024
+2. Build Commit:	commit 0814fa0482bb39856cc903121426113bfdc21ab3
+3. Build System:	Linux 5.15.0-91-generic #101-Ubuntu SMP Tue Nov 14 13:30:08 UTC 2023 x86_64 x86_64 x86_64
+4. Compiler Version:		gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
+5. NVCC Version:	
+6. GPU ARCH:		
+7. Build Flags:		-Iinclude/ -lm -lgomp -Wall -fopenmp -Ofast -march=native -funroll-loops -mavx2 -mfma -DAVX2
+
+////////////////////////////////////////////////////////
+
+nasm_name: yolov3_B1_T800
+STAGE: Initialization
+	Edge 0 is connected
+	Initialized to device idx: 1
+STAGE: PARTITIONING
+	[EDGE 0] NASM: ../../data/yolov3_B1_T800.nasm
+	[EDGE 0] DNN: ../../data/yolov3_base.aspen
+	[EDGE 0] INPUT: ../../data/batched_input_128.bin
+STAGE: PROFILING COMPUTATION 1
+[Init sequential offload] division ninst idx: 0 from dev: 1 server_id: 1
+		Signaling nasm completion...
+	Total: 53383	Avg Computation Time: 0.288821ms
+STAGE: PROFILING NETWORK
+	[Edge Device 0]connection key: 12534
+	profiling as SERVER...
+STAGE: SCHEDULING - dynamic
+	[Device 1]Init dynamic scheduler
+	[Device 0]Avg server ninst computation time: 0.288821ms
+	[Device 0]Avg edge ninst computation time:   0.122315ms
+	[Device 0]Avg bandwidth: 69.227531Mbps
+	[Device 0]RTT: 4.169941ms
+STAGE: INFERENCE
+Initializing Networking Engine...
+Networking: TCP Server listening on port 8100
+Networking: TCP Server accepted connection from 147.46.118.129
+Networking: TCP Server received EDGE ACK
+[Inference 1] inference: 1/5
+	[Edge Device 0]connection key: 12534
+	[Edge Device 0]time_offset: 0.515605
+[Inference 1] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (0): 2.537155 - 0.484202 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (962/53383)
+	[Edge 0] Transmission latency : 1739.319086
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 2] inference: 2/5
+	[Edge Device 0]connection key: 12535
+	[Edge Device 0]time_offset: 0.515429
+[Inference 2] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (1): 3.305766 - 0.447757 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (962/53383)
+	[Edge 0] Transmission latency : 2531.611443
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 3] inference: 3/5
+	[Edge Device 0]connection key: 12536
+	[Edge Device 0]time_offset: 0.515833
+[Inference 3] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (2): 4.037623 - 0.476196 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (962/53383)
+	[Edge 0] Transmission latency : 3240.908623
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 4] inference: 4/5
+	[Edge Device 0]connection key: 12537
+	[Edge Device 0]time_offset: 0.514781
+[Inference 4] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (3): 4.811058 - 0.460369 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (962/53383)
+	[Edge 0] Transmission latency : 4025.246620
+	[Edge 0] Dynamic overhead : 0.000000
+[Inference 5] inference: 5/5
+	[Edge Device 0]connection key: 12538
+	[Edge Device 0]time_offset: 0.513777
+[Inference 5] Running DSEs...
+		Signaling nasm completion...
+Time measurement run_aspen (4): 5.602371 - 0.471103 secs elapsed since last measurement.
+Networking: RX Command -19960930 received - RX stop signal received.
+	[Communicate profiles]
+	[Edge 0] Total received : (962/53383)
+	[Edge 0] Transmission latency : 4808.295727
+	[Edge 0] Dynamic overhead : 0.000000

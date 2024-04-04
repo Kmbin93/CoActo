@@ -1,6 +1,6 @@
 source ./scripts/param_mu.sh
 
-cmd="./main_mu \
+cmd="taskset -c 0-$(($DSE_NUM+1)) ./coacto \
     --device_mode=0   \
     --dirname=${DIRNAME}  \
     --target_dnn_dir=${TARGET_DNN_DIR} \
@@ -12,7 +12,7 @@ cmd="./main_mu \
     --schedule_policy=${SCHEDULE_POLICY}  \
     --sched_sequential_idx=${SCHED_SEQUENTIAL_IDX}    \
     --sched_partial_ratio=${SCHED_PARTIAL_RATIO}    \
-    --dse_num=${DSE_NUM}    \
+    --dse_num=64    \
     --output_order=${OUTPUT_ORDER}    \
     --inference_repeat_num=${INFERENCE_REPEAT_NUM} \
     --num_edge_devices=${NUM_EDGE_DEVICES}"

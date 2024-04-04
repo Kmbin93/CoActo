@@ -16,6 +16,7 @@ logs
 .out
 .vscode/*
 main_mu
+coacto
 subcmdline.c
 subcmdline.h
 .outputs
