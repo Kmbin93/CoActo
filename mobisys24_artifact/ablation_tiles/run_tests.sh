@@ -108,7 +108,7 @@ do
             fi
         fi
 
-        edge_cmd="$shell_cmd 'cd ~/kmbin/CoActo/mobisys24_artifact/fig8 && $edge_cmd_wo_ssh'"
+        edge_cmd="$shell_cmd 'cd ~/kmbin/CoActo/mobisys24_artifact/ablation_tiles && $edge_cmd_wo_ssh'"
         
         echo "//////////    SERVER command    //////////" >> $output_log
         echo "    $server_cmd" >> $output_log

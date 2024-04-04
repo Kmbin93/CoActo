@@ -13,6 +13,7 @@ main_scheduling
 *.gz
 baselines
 logs
+results
 .out
 .vscode/*
 main_mu
