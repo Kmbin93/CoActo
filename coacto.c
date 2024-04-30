@@ -62,7 +62,6 @@ int main(int argc, char **argv)
     avg_ninst_profile_t *ninst_profile[SCHEDULE_MAX_DEVICES];
     network_profile_t *network_profile[SCHEDULE_MAX_DEVICES];
 
-    sched_processor_t *schedule;
     dynamic_scheduler_t *dynamic_scheduler;
     spinn_scheduler_t *spinn_scheduler;
 
@@ -159,7 +158,6 @@ int main(int argc, char **argv)
             dse_group_add_rpool_arr(dse_group, rpool_arr[edge_id], edge_id);
     }
 
-    networking_engine* net_engine = NULL;
     networking_engine *net_engine_arr[SCHEDULE_MAX_DEVICES];
 
     char* target_nasm_dirs[SCHEDULE_MAX_DEVICES];
@@ -264,9 +262,7 @@ int main(int argc, char **argv)
             connection_key = 12534;
             write_n(client_sock_arr[i], &connection_key, sizeof(int));
             PRTF("\t[Edge Device %d]connection key: %d\n", i, connection_key);
-            // PRTF("\t[Edge Device %d]time_offset: %f\n", i, time_offset);
             network_profile[i] = profile_network(device_mode, i, server_sock, client_sock_arr[i]);
-            // PRTF("\t[Edge Device %d]RTT: %fms Bandwidth: %fMbps\n", i, network_profile[i]->rtt * 1000.0, network_profile[i]->transmit_rate);
         }
     }
     else if (device_mode == DEV_EDGE) 
@@ -434,13 +430,9 @@ int main(int argc, char **argv)
             int num_sync_edges = 0;
 
             double max_recv_time = 0.0;
-            double max_sent_time = 0.0;
-            double min_recv_time = 0.0;
             double min_sent_time = 0.0;
             double max_computed_time = 0.0;
             double min_computed_time = 0.0;
-            double inf_latency = 0.0;
-            double start_time = 0.0;
             int total_received = 0;
 
             if(device_mode == DEV_SERVER)
@@ -521,8 +513,6 @@ int main(int argc, char **argv)
                 // print_rpool_info (rpool_arr[device_idx]);
                 net_engine_add_input_rpool_reverse (net_engine_arr[device_idx], target_nasm[device_idx], target_inputs[device_idx]);
             }
-
-            // printf("%d\n", net_engine_arr[device_idx]->tx_queue->ninst_ptr_arr[0]->ninst_idx);
 
             #ifdef SUPPRESS_OUTPUT
             start_time = get_elapsed_time_start();

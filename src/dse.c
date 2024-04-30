@@ -206,7 +206,6 @@ void dse_schedule (dse_t *dse)
                 // For edge side offloading decision
                 if(dse->device_mode == DEV_EDGE)
                 {
-                    double s = get_time_secs();
                     // float eft_server = get_eft_server(dse->dynamic_scheduler, dse->net_engine_arr[target_device]->nasm, ninst, dse->target_device);
                     int total_input_data_size = dse->dynamic_scheduler->total_input_data_size[dse->target_device];
                     int total_ninst_until_target_ninst = dse->dynamic_scheduler->total_ninst_until_target_ninst[dse->target_device][ninst->ldata->layer->layer_idx] + ninst->ninst_idx - ninst->ldata->ninst_arr_start[0].ninst_idx;
@@ -224,7 +223,6 @@ void dse_schedule (dse_t *dse)
                                     (net_tx_queue_num_stored) * ninst->tile_dims[OUT_H] * ninst->tile_dims[OUT_W] * sizeof(float) * 8 / dse->dynamic_scheduler->avg_bandwidth[dse->target_device] / 1000000; // Transmission latency
                     
                     // float eft_offloaded = get_eft_offloaded(dse->dynamic_scheduler, dse->net_engine_arr[target_device], dse->target_device, ninst->tile_dims[OUT_H] * ninst->tile_dims[OUT_W] * sizeof(float));
-                    double e = get_time_secs();
                     
                     ninst->eft_offloaded = eft_offloaded;
                     ninst->eft_server = eft_server;
