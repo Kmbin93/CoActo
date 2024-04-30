@@ -56,7 +56,6 @@ struct nasm_t
 
     int operating_mode;
 
-    double dynamic_overhead;
     double queueing_overhead;
     double start_time;
 };

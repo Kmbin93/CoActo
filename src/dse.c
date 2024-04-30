@@ -225,7 +225,6 @@ void dse_schedule (dse_t *dse)
                     
                     // float eft_offloaded = get_eft_offloaded(dse->dynamic_scheduler, dse->net_engine_arr[target_device], dse->target_device, ninst->tile_dims[OUT_H] * ninst->tile_dims[OUT_W] * sizeof(float));
                     double e = get_time_secs();
-                    dse->net_engine_arr[dse->target_device]->nasm->dynamic_overhead += (e-s) * 1000.0;
                     
                     ninst->eft_offloaded = eft_offloaded;
                     ninst->eft_server = eft_server;
