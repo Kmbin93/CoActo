@@ -3,6 +3,7 @@ source ./scripts/param_mu.sh
 dnn="vgg16"
 batch=1
 num_tile=100
+EDGE_CREDIT=nxc@127.0.0.1
 
 server_cmd="./main_mu \
     --device_mode=0   \
@@ -14,9 +15,7 @@ server_cmd="./main_mu \
     --server_ip=${server_ip} \
     --server_port=${server_port}   \
     --schedule_policy=${SCHEDULE_POLICY}  \
-    --sched_sequential_idx=${SCHED_SEQUENTIAL_IDX}    \
     --dse_num=${DSE_NUM}    \
-    --output_order=${OUTPUT_ORDER}    \
     --inference_repeat_num=${INFERENCE_REPEAT_NUM} \
     --num_edge_devices=${NUM_EDGE_DEVICES}"
 
@@ -32,9 +31,7 @@ edge_exec_cmd="./main_mu \
     --server_ip=${server_ip} \
     --server_port=${server_port}   \
     --schedule_policy=${SCHEDULE_POLICY}  \
-    --sched_sequential_idx=${SCHED_SEQUENTIAL_IDX}    \
     --dse_num=${EDGE_DSE_NUM}    \
-    --output_order=${OUTPUT_ORDER}    \
     --inference_repeat_num=${INFERENCE_REPEAT_NUM} \
     --num_edge_devices=${NUM_EDGE_DEVICES}"
 

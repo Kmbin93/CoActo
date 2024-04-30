@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include "aspen.h"
 #include "util.h"
 #include "nasm.h"
@@ -51,7 +52,8 @@ int main(int argc, char **argv)
     int sched_sequential_idx = 1;
     int dse_num = ai.dse_num_arg;
     int num_edge_devices = ai.num_edge_devices_arg;
-    char *output_order = ai.output_order_arg;
+    // char *output_order = ai.output_order_arg;
+    char *output_order = "cnn";
     char nasm_name[256] = {0};
     int device_idx = device_mode;
     
@@ -98,6 +100,9 @@ int main(int argc, char **argv)
         else 
             strcpy(nasm_name, nasm_name_with_ext);
         PRTF ("nasm_name: %s\n", nasm_name);
+        if (strstr(nasm_name, "bert") != NULL) {
+            output_order = "transformer";
+        }
     }
 
     /** STAGE: Initialization **/

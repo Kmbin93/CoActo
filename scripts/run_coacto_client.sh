@@ -10,8 +10,7 @@ cmd="./coacto \
     --server_ip=${server_ip} \
     --server_port=${server_port}   \
     --schedule_policy=${SCHEDULE_POLICY}  \
-    --dse_num=${DSE_NUM}    \
-    --output_order=${OUTPUT_ORDER}    \
+    --dse_num=${EDGE_DSE_NUM}    \
     --inference_repeat_num=${INFERENCE_REPEAT_NUM} \
     --num_edge_devices=${NUM_EDGE_DEVICES}"
 

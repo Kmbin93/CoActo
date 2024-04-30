@@ -3,19 +3,16 @@ package "coacto"
 purpose "Experiment with multiple scheduling choices."
 
 # Options
-option "device_mode" - "" int required
-option "dirname" - "" string required
-option "prefix" - "" string optional
-option "log_idx_start" - "" int optional default="0"
-option "inference_repeat_num" - "" int optional
-option "target_config" - "" string optional
-option "target_bin" - "" string optional
-option "target_dnn_dir" - "" string optional
-option "target_nasm_dir" - "" string required
-option "target_input" - "" string required
+option "device_mode" - "An integer option for setting the device mode of the program (0 - server, 1 - edge). For example, if you want to run the program as a server, device_mode is 0." int required 
+option "dirname" - "A directory path for storing the log files." string required
+option "prefix" - "A prefix of the log files." string optional
+option "log_idx_start" - "A start index of the log files." int optional default="0"
+option "inference_repeat_num" - "The number of inference repeation for running." int optional
+option "target_dnn_dir" - "Target dnn structure file (*.aspen) path" string required
+option "target_nasm_dir" - "Target dnn nasm file (*.nasm) path." string required
+option "target_input" - "Target input file path. Default is data/batched_input_128.bin" string required default="data/batched_input_128.bin"
 option "server_ip" - "" string required
 option "server_port" - "" int required
-option "schedule_policy" - "" string required values="dynamic","local","conventional","spinn"
-option "dse_num" - "" int required
-option "output_order" - "" string required values="cnn","transformer"
-option "num_edge_devices" - "" int required
+option "schedule_policy" - "dynamic - CoActo, Local - Ondevice, conventional - Cloudonly, spinn - SPINN" string required values="dynamic","local","conventional","spinn"
+option "dse_num" - "The number of computing engines of CoActo. It is recommended to use the number of CPU cores of the target platform." int required
+option "num_edge_devices" - "The number of edge devices for the multi-tenant experiment. For single-user scenario, it is 1. Note that the host and the client should set same value as the server waits until the whole edge devices are connected before running inferences." int required
