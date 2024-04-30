@@ -12,12 +12,6 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-int total_transferred = 0;
-
-#define SCHED_HEFT      0
-#define SCHED_PARTIAL   1
-#define SCHED_DYNAMIC   2
-
 // OPTIONS
 // option "device_mode" - "" int required
 // option "dirname" - "" string required
@@ -30,8 +24,6 @@ int total_transferred = 0;
 // option "server_ip" - "" string required
 // option "server_port" - "" int required
 // option "schedule_policy" - "" string required values="partial","2"
-// option "sched_partial_ratio" - "" float optional
-// option "sched_sequential_idx" - "" int optional
 // option "dse_num" - "" int required
 // option "output_order" - "" string required values="cnn","transformer"
 
@@ -56,8 +48,7 @@ int main(int argc, char **argv)
     char *server_ip = ai.server_ip_arg;
     int server_port = ai.server_port_arg;
     char *schedule_policy = ai.schedule_policy_arg;
-    float sched_partial_ratio = ai.sched_partial_ratio_arg;
-    int sched_sequential_idx = ai.sched_sequential_idx_arg;
+    int sched_sequential_idx = 1;
     int dse_num = ai.dse_num_arg;
     int num_edge_devices = ai.num_edge_devices_arg;
     char *output_order = ai.output_order_arg;
@@ -297,44 +288,17 @@ int main(int argc, char **argv)
     /** STAGE: SCHEDULING **/
     PRTF ("STAGE: SCHEDULING - %s\n", schedule_policy);
 
-    if (!strcmp(schedule_policy, "partial"))
-    {
-        
-        PRTF("\t[Partial Offloading] Sched Partial Ratio: %f\n", sched_partial_ratio);
-         
-        for(int edge_id = 0; edge_id < num_edge_devices; edge_id++)
-        {
-            if(device_mode == DEV_SERVER || device_idx == edge_id)
-            {
-                init_partial_offload(target_nasm[edge_id], sched_sequential_idx, sched_partial_ratio, edge_id, num_edge_devices);
-            }
-        }
-    }
-    else if (!strcmp(schedule_policy, "random"))
-    {
-        
-        PRTF("\t[Random Offloading] Sched Partial Ratio: %f\n", sched_partial_ratio);
-        
-
-        for(int edge_id = 0; edge_id < num_edge_devices; edge_id++)
-        {
-            if(device_mode == DEV_SERVER || device_idx == edge_id)
-            {
-                init_random_offload(target_nasm[edge_id], sched_partial_ratio, edge_id, num_edge_devices);
-            }
-        }
-    }
-    else if (!strcmp(schedule_policy, "conventional") || !strcmp(schedule_policy, "conventional+pipeline"))
+    if (!strcmp(schedule_policy, "conventional"))
     {
         for(int edge_id = 0; edge_id < num_edge_devices; edge_id++)
         {
             if(device_mode == DEV_SERVER || device_idx == edge_id)
             {
-                init_sequential_offload(target_nasm[edge_id], sched_sequential_idx, edge_id, num_edge_devices); // server idx == num_edge_devices
+                init_sequential_offload(target_nasm[edge_id], 1, edge_id, num_edge_devices); // server idx == num_edge_devices
             }
         }
     }
-    else if (!strcmp(schedule_policy, "spinn") || !strcmp(schedule_policy, "spinn+pipeline"))
+    else if (!strcmp(schedule_policy, "spinn"))
     {
         spinn_scheduler = init_spinn_scheduler(ninst_profile, network_profile, target_nasm, device_mode, device_idx, num_edge_devices);
 
@@ -408,16 +372,6 @@ int main(int argc, char **argv)
     }
 
     /** STAGE: INFERENCE **/
-
-    // for(int i = 0; i < target_nasm[device_idx]->num_ninst; i++)
-    // {
-    //     double p = 0.0;
-    //     ninst_t* ninst = &target_nasm[device_idx]->ninst_arr[i];
-    //     p = (double)ninst->ldata->layer->layer_idx - (double)ninst->ninst_idx / target_nasm[device_idx]->num_ninst;
-    //     if(ninst->ldata->layer->layer_idx == 0) p = (double)target_nasm[device_idx]->num_ldata - (double)ninst->ninst_idx / target_nasm[device_idx]->num_ninst;
-    //     PRTF("\tNINST %d: %f\n", i, p);
-    // }
-    
     PRTF("STAGE: INFERENCE\n");
     
     if (!strcmp(schedule_policy, "local"))
@@ -447,15 +401,6 @@ int main(int argc, char **argv)
     {
         dse_group_set_multiuser (dse_group, 1);
         if (device_mode == DEV_SERVER) {
-            // if (!strcmp(schedule_policy, "conventional") || !strcmp(schedule_policy, "conventional+pipeline") || 
-            //             !strcmp(schedule_policy, "spinn") || !strcmp(schedule_policy, "spinn+pipeline")) 
-            //     dse_group_init_enable_device(dse_group, num_edge_devices);
-            // else 
-            // {
-            //     for (int edge_id = 0; edge_id < num_edge_devices; edge_id++) {
-            //         dse_group_set_enable_device(dse_group, edge_id, 1);
-            //     }
-            // }
             dse_group_init_enable_device(dse_group, num_edge_devices);
         }
 
@@ -543,7 +488,7 @@ int main(int argc, char **argv)
                     apu_reset_nasm(target_nasm[edge_id]);
 
                     if (!strcmp(schedule_policy, "dynamic")) init_dynamic_offload(target_nasm[edge_id], device_mode, edge_id, num_edge_devices);
-                    if (!strcmp(schedule_policy, "spinn") || !strcmp(schedule_policy, "spinn+pipeline"))
+                    if (!strcmp(schedule_policy, "spinn"))
                     {
                         if(device_mode == DEV_SERVER)
                         {
@@ -557,26 +502,6 @@ int main(int argc, char **argv)
                             write_n(server_sock, &sched_sequential_idx, sizeof(int));   
                         }
                         init_sequential_offload(target_nasm[edge_id], sched_sequential_idx, edge_id, num_edge_devices); // server idx == num_edge_devices
-                    }
-                    if (!strcmp(schedule_policy, "partial"))
-                    {
-                        for(int edge_id = 0; edge_id < num_edge_devices; edge_id++)
-                        {
-                            if(device_mode == DEV_SERVER || device_idx == edge_id)
-                            {
-                                init_partial_offload(target_nasm[edge_id], sched_sequential_idx, sched_partial_ratio, edge_id, num_edge_devices);
-                            }
-                        }
-                    }
-                    if (!strcmp(schedule_policy, "random"))
-                    {
-                        for(int edge_id = 0; edge_id < num_edge_devices; edge_id++)
-                        {
-                            if(device_mode == DEV_SERVER || device_idx == edge_id)
-                            {
-                                init_random_offload(target_nasm[edge_id], sched_partial_ratio, edge_id, num_edge_devices);
-                            }
-                        }
                     }
 
                     set_nasm_inference_id(target_nasm[edge_id], connection_key);
@@ -668,7 +593,7 @@ int main(int argc, char **argv)
                     read_n(server_sock, &prev_server_latency, sizeof(float));
                     read_n(server_sock, &max_recv_time, sizeof(double));
 
-                    if(!strcmp(schedule_policy, "spinn") || !strcmp(schedule_policy, "spinn+pipeline"))
+                    if(!strcmp(schedule_policy, "spinn"))
                     {
                         int idx = spinn_find_idx_by_split_layer(spinn_scheduler, edge_id);
                         prev_bandwidth = spinn_scheduler->data_size_split_candidates[edge_id][idx] / (max_recv_time - min_sent_time) / 125000;
