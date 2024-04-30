@@ -18,7 +18,7 @@ Our sourcecode must be compiled and run on x86 CPU with AVX2 support for server 
 6. For the network bandwidth emulation, `Linux TC` should be installed on mobile platforms.
 
 ### 3. Models
-Our scripts run 4 DNN models (VGG16, ResNet50, Bert-Base, and YoloV3). We provide the input file, the pre-generated tile-based computation graph, and their weight files on Google Drive (https://drive.google.com/drive/folders/1g7LFdX4vuJ7zGfH8gVNNs3rLBWQT1uhx?usp=sharing). Please download `batched_input_128.bin`, `*.aspen` files of each model to the `data` directory before running the scripts.
+Our scripts run 4 DNN models (VGG16, ResNet50, Bert-Base, and YoloV3). We provide the input file, the pre-generated tile-based computation graph, and their weight files on Google Drive (https://drive.google.com/drive/folders/1g7LFdX4vuJ7zGfH8gVNNs3rLBWQT1uhx?usp=sharing). Please download the `batched_input_128.bin`, and the `*.aspen` file of each model to the `data` directory before running the scripts.
 
 ## Installation and Compile
 1. You can pull this repository.
